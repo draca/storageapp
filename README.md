@@ -3,12 +3,12 @@ Angular-todo app
 
 Description
 ----------------------------------
-Todo app made in angular
+App for keeping track of your storage area
 
 
 Nodes
 ----------------------------------
-This app is made in Angular.js and designed to run on an apache server with mysql. Wamp fits the purpose, for now.
+runs on an apache server with mysql. Wamp fits the purpose, for now.
 
 
 How to run
