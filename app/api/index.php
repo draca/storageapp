@@ -774,6 +774,46 @@ $app->delete('/type/:id',function ($id) use ($app) {
 });
 
 
+$app->post('/image',function() use ($app) {
+
+$payload = json_decode($app->request()->getBody());
+
+
+if (!isset($_FILES['uploads'])) {
+        echo "No files uploaded!!";
+        return;
+    }
+    $imgs = array();
+
+    $files = $_FILES['uploads'];
+    $cnt = count($files['name']);
+
+    for($i = 0 ; $i < $cnt ; $i++) {
+       
+        
+
+            $name = uniqid('img-'.date('Ymd').'-');
+            echo is_writable('/uploads/' . $name) == false;
+            if( move_uploaded_file($files['tmp_name'][$i], '/uploads/' . $name) ==true){
+                $imgs[] = array('url' => '/uploads/' . $name, 'name' => $files['name'][$i]);}
+            
+
+        
+    }
+
+    $imageCount = count($imgs);
+
+    if ($imageCount == 0) {
+       echo json_encode(array('status' => 'No files uploaded!!'));
+       return;
+    }
+    echo json_encode(array('status' => 'ok'));
+
+
+
+});
+
+
 
 /**
  * Step 4: Run the Slim application
