@@ -1,4 +1,4 @@
-Angular-todo app
+Storage app
 ============
 
 Description
