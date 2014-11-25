@@ -773,43 +773,81 @@ $app->delete('/type/:id',function ($id) use ($app) {
     }
 });
 
+$app->get('/image/:id',function($id){
+$app->response->header('Content-Type', 'content-type: ' . "image/jpg");
+
+
+try{
+
+ $pic = Picture::find_by_pk($id);
+
+ echo $pic -> data;
+
+   } catch (Exception $e) {
+
+        echo $e->getMessage();
+    }
+
+
+});
+
+
+
+
 
 $app->post('/image',function() use ($app) {
 
 $payload = json_decode($app->request()->getBody());
-
-
-if (!isset($_FILES['uploads'])) {
-        echo "No files uploaded!!";
-        return;
+var_dump($_FILES);
+$target_dir = "D:/Documents/GitHub/storageapp/app/uploads/";
+$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+$uploadOk = 1;
+$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+// Check if image file is a actual image or fake image
+if(isset($_POST["submit"])) {
+    $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+    if($check !== false) {
+        echo "File is an image - " . $check["mime"] . ".";
+        $uploadOk = 1;
+    } else {
+        echo "File is not an image.";
+        $uploadOk = 0;
     }
-    $imgs = array();
+}
+// Check if file already exists
+if (file_exists($target_file)) {
+    echo "Sorry, file already exists.";
+    $uploadOk = 0;
+}
+// Check file size
+if ($_FILES["fileToUpload"]["size"] > 5000000) {
+    echo "Sorry, your file is too large.";
+    $uploadOk = 0;
+}
+// Allow certain file formats
+if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+&& $imageFileType != "gif" ) {
+    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+    $uploadOk = 0;
+}
+// Check if $uploadOk is set to 0 by an error
+if ($uploadOk == 0) {
+    echo "Sorry, your file was not uploaded.";
+// if everything is ok, try to upload file
+} else {
+$pic= fopen ( $_FILES["fileToUpload"]["tmp_name"], "r");
+$temp = fread($pic,$_FILES["fileToUpload"]["size"]);
+$picture = new Picture();
+$picture -> object_id = 1;
+$picture -> data = $temp;
+$picture -> save();
 
-    $files = $_FILES['uploads'];
-    $cnt = count($files['name']);
-
-    for($i = 0 ; $i < $cnt ; $i++) {
-       
-        
-
-            $name = uniqid('img-'.date('Ymd').'-');
-            echo is_writable('/uploads/' . $name) == false;
-            if( move_uploaded_file($files['tmp_name'][$i], '/uploads/' . $name) ==true){
-                $imgs[] = array('url' => '/uploads/' . $name, 'name' => $files['name'][$i]);}
-            
-
-        
+    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+        echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
+    } else {
+        echo "Sorry, there was an error uploading your file.";
     }
-
-    $imageCount = count($imgs);
-
-    if ($imageCount == 0) {
-       echo json_encode(array('status' => 'No files uploaded!!'));
-       return;
-    }
-    echo json_encode(array('status' => 'ok'));
-
-
+}
 
 });
 
