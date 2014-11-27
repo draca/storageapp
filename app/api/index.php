@@ -895,7 +895,7 @@ $app->get('/object/:id/imagelist',function($id) use ($app)
 
 
 
-$app->post('/image',function() use ($app) {
+$app->post('/image/:id',function() use ($app) {
 
 
 $payload = json_decode($app->request()->getBody());
@@ -938,7 +938,7 @@ if ($uploadOk == 0) {
 $pic= fopen ( $_FILES["fileToUpload"]["tmp_name"], "r");
 $temp = fread($pic,$_FILES["fileToUpload"]["size"]);
 $picture = new Picture();
-$picture -> object_id = 1;
+$picture -> object_id = $id;
 $picture -> mime = $check["mime"];
 $picture -> data = $temp;
 $picture -> save();
