@@ -885,6 +885,7 @@ $app->get('/object/:id/imagelist',function($id) use ($app)
         $object = Picture::find("all",array('conditions' =>  array("object_id" => $id),'select' => 'id,mime,object_id'  )  ) ;
         echo arToJson( $object ) ;
 
+
     } catch (Exception $e) {
 
         
@@ -896,6 +897,7 @@ $app->get('/object/:id/imagelist',function($id) use ($app)
 
 
 $app->post('/image/:id',function() use ($app) {
+
 
 
 $payload = json_decode($app->request()->getBody());
