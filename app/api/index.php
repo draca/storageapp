@@ -206,14 +206,10 @@ $app->post('/user/authenticate', function () use ($app) {
                 $session = Session::find_by_pk($post->username);
             } catch(Exception $e) {
 
-            $session = new Session();
-            $session-> token = hash ( "sha256" ,get_random_salt(),false);
-            $session-> user = $post->username;
-
-            $session->save();
+                $token = make_session($post->username);
 
             }
-            $token = make_session($post->username);
+            
             echo json_encode(array('status' => 'ok', 'token' => $token ));
         }
         else{
@@ -223,7 +219,7 @@ $app->post('/user/authenticate', function () use ($app) {
 
 
       } catch (Exception $e) {
-        echo $e->getMessage();
+        echo "Login error";
     }
 
 });
@@ -253,10 +249,14 @@ $app->delete('/user/authenticate', function () use ($app){
 
 
 
-$app->post('/user', function () use ($app) {
+$app->post('/user/:token', function ($token) use ($app) {
 
     //var_dump();
     try {
+
+        $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 4){ throw new Exception("Access Denied!!");}
         $payload = json_decode($app->request()->getBody());
 
         $post = new User();
@@ -265,7 +265,7 @@ $app->post('/user', function () use ($app) {
         $post->username = $payload->username;
         $post->salt = hash ( "sha256",get_random_salt(),false);
         $post->password = kda($payload->password , $post->salt);
-        $post->access = 1;
+        $post->access = $payload-> access;
         $post->save();
         $token = make_session($post->username);
         echo json_encode(array('status' => 'ok', 'token' => $token ));
@@ -274,6 +274,46 @@ $app->post('/user', function () use ($app) {
         echo $e->getMessage();
     }
 
+});
+
+// PUT route
+$app->put('/user/:id/:token', function ($id,$token) use ($app)  {
+    try {
+
+
+        $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 4){ throw new Exception("Access Denied!!");}
+        $payload = json_decode($app->request()->getBody());
+
+
+        $post = User::find_by_pk($id);
+// oldPwd new Pwd
+
+        if( $payload->newPwd != ""  )
+        {
+            if( $post->password == kda($payload->oldPwd, $post->salt) )
+            {
+
+                $post->password = kda($payload->newPwd , $post->salt);
+
+            }else{   throw new Exception("Wrong Password"); }
+
+
+        } 
+
+
+        if($payload-> access != ""){$payload-> access = $payload->access; }
+        if($payload->email != ""){ $post->email    = $payload->email;}
+
+        $post->save();
+
+        echo json_encode(array('status' => 'ok'));
+
+    } catch (Exception $e) {
+
+        echo $e->getMessage();
+    }
 });
 
 
@@ -306,8 +346,7 @@ $app->put('/user/:token', function ($token) use ($app)  {
 
 
         if($payload->email != ""){ $post->email    = $payload->email;}
-        $post->twitter = $payload->twitter;
-        $post->facebook = $payload->facebook;
+
 
         $post->save();
 
@@ -357,11 +396,15 @@ $app->get('/objects/', function () {
     }
 
 });
-$app->post('/objects/',function () use ($app) {
+$app->post('/objects/:token',function ($token) use ($app) {
    try { 
 
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 1){ throw new Exception("Access Denied!!");}
+
+
 
         $object = new Objects($payload);
         $object -> save();
@@ -392,11 +435,16 @@ $app->get('/objects/:id',function ($id) use ($app) {
     }
 });
 
-$app->put('/objects/:id',function ($id) use ($app) {
+$app->put('/objects/:id/:token',function ($id,$token) use ($app) {
    try { 
 
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 2){ throw new Exception("Access Denied!!");}
+
+
+
         $object=Objects::all('first', array('conditions' => array('id' => $id)));
         $object = $object[0];
 
@@ -419,6 +467,10 @@ $app->delete('/objects/:id',function ($id) use ($app) {
 
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 2){ throw new Exception("Access Denied!!");}
+
+
         $object=Objects::all('all', array('conditions' => array('id' => $id)));
         $object -> delete();
 
@@ -443,11 +495,13 @@ $app->get('/conditions/', function () {
     }
 
 });
-$app->post('/conditions/',function () use ($app) {
+$app->post('/conditions/:token',function ($token) use ($app) {
    try { 
 
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 1){ throw new Exception("Access Denied!!");}
 
         $object = new Conditions($payload);
         $object -> save();
@@ -478,11 +532,14 @@ $app->get('/conditions/:id',function ($id) use ($app) {
     }
 });
 
-$app->put('/conditions/:id',function ($id) use ($app) {
+$app->put('/conditions/:id/:token',function ($id, $token) use ($app) {
    try { 
 
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 2){ throw new Exception("Access Denied!!");}
+
         $object=Conditions::all('first', array('conditions' => array('id' => $id)));
         $object = $object[0];
 
@@ -500,11 +557,14 @@ $app->put('/conditions/:id',function ($id) use ($app) {
     }
 });
 
-$app->delete('/conditions/:id',function ($id) use ($app) {
+$app->delete('/conditions/:id/:token',function ($id) use ($app) {
    try { 
 
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 3){ throw new Exception("Access Denied!!");}
+
         $object=Condition::all('all', array('conditions' => array('id' => $id)));
         $object -> delete();
 
@@ -529,11 +589,14 @@ $app->get('/attributes/object/:id', function ($id) {
     }
 
 });
-$app->post('/attributes/',function () use ($app) {
+$app->post('/attributes/:token',function ($token) use ($app) {
    try { 
 
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 1){ throw new Exception("Access Denied!!");}
+
 
         $object = new Attribute($payload);
         $object -> save();
@@ -564,11 +627,15 @@ $app->get('/attributes/:id',function ($id) use ($app) {
     }
 });
 
-$app->put('/attributes/:id',function ($id) use ($app) {
+$app->put('/attributes/:id/:token',function ($id,$token) use ($app) {
    try { 
 
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 2){ throw new Exception("Access Denied!!");}
+
+
         $object=Attribute::all('first', array('conditions' => array('id' => $id)));
         $object = $object[0];
 
@@ -586,11 +653,15 @@ $app->put('/attributes/:id',function ($id) use ($app) {
     }
 });
 
-$app->delete('/attributes/:id',function ($id) use ($app) {
+$app->delete('/attributes/:id/:token',function ($id, $token) use ($app) {
    try { 
 
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 3){ throw new Exception("Access Denied!!");}
+
+
         $object=Attribute::all('all', array('conditions' => array('id' => $id)));
         $object -> delete();
 
@@ -615,11 +686,13 @@ $app->get('/locations/', function () {
     }
 
 });
-$app->post('/locations/',function () use ($app) {
+$app->post('/locations/:token',function ($token) use ($app) {
    try { 
 
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 2){ throw new Exception("Access Denied!!");}
 
         $object = new Location($payload);
         $object -> save();
@@ -650,11 +723,15 @@ $app->get('/locations/:id',function ($id) use ($app) {
     }
 });
 
-$app->put('/locations/:id',function ($id) use ($app) {
+$app->put('/locations/:id/:token',function ($id,$token) use ($app) {
    try { 
 
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 2){ throw new Exception("Access Denied!!");}
+
+
         $object=Location::all('first', array('conditions' => array('id' => $id)));
         $object = $object[0];
 
@@ -672,11 +749,15 @@ $app->put('/locations/:id',function ($id) use ($app) {
     }
 });
 
-$app->delete('/locations/:id',function ($id) use ($app) {
+$app->delete('/locations/:id/:token',function ($id,$token) use ($app) {
    try { 
 
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 3){ throw new Exception("Access Denied!!");}
+
+
         $object=Location::all('all', array('conditions' => array('id' => $id)));
         $object -> delete();
 
@@ -700,11 +781,13 @@ $app->get('/type/', function ($id) {
     }
 
 });
-$app->post('/type/',function () use ($app) {
+$app->post('/type/:token',function ($token) use ($app) {
    try { 
 
         $payload = json_decode($app->request()->getBody());
-        $session = is_session_active($token);
+                $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 1){ throw new Exception("Access Denied!!");}
 
         $object = new Location($payload);
         $object -> save();
@@ -735,11 +818,13 @@ $app->get('/type/:id',function ($id) use ($app) {
     }
 });
 
-$app->put('/type/:id',function ($id) use ($app) {
+$app->put('/type/:id/:token',function ($id,$token) use ($app) {
    try { 
 
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 2){ throw new Exception("Access Denied!!");}
         $object=Location::all('first', array('conditions' => array('id' => $id)));
         $object = $object[0];
 
@@ -757,11 +842,13 @@ $app->put('/type/:id',function ($id) use ($app) {
     }
 });
 
-$app->delete('/type/:id',function ($id) use ($app) {
+$app->delete('/type/:id/:token',function ($id,$token) use ($app) {
    try { 
 
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 3){ throw new Exception("Access Denied!!");}
         $object=Location::all('all', array('conditions' => array('id' => $id)));
         $object -> delete();
 
@@ -773,81 +860,100 @@ $app->delete('/type/:id',function ($id) use ($app) {
     }
 });
 
-$app->get('/image/:id',function($id){
-$app->response->header('Content-Type', 'content-type: ' . "image/jpg");
+$app->get('/image/:id',function($id) use ($app) {
+$res = $app->response();
+$res->header('Content-Type', 'image/jpg');
 
 
 try{
 
  $pic = Picture::find_by_pk($id);
-
- echo $pic -> data;
+ $res = $res->body($pic -> data);
 
    } catch (Exception $e) {
 
+        $res->header('Content-Type', 'text/html');
         echo $e->getMessage();
     }
 
 
 });
 
+$app->get('/object/:id/imagelist',function($id) use ($app) 
+{
+    try{
+        $object = Picture::find("all",array('conditions' =>  array("object_id" => $id),'select' => 'id,mime,object_id'  )  ) ;
+        echo arToJson( $object ) ;
+
+    } catch (Exception $e) {
+
+        
+        echo $e->getMessage();
+    }
+});
 
 
 
 
 $app->post('/image',function() use ($app) {
 
+
 $payload = json_decode($app->request()->getBody());
-var_dump($_FILES);
-$target_dir = "D:/Documents/GitHub/storageapp/app/uploads/";
-$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+$session = is_session_active($token);
+$user = User::find_by_pk($session->username);
+if($user -> access < 2){ throw new Exception("Access Denied!!");}
+
+try{
+
+
 $uploadOk = 1;
-$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 // Check if image file is a actual image or fake image
 if(isset($_POST["submit"])) {
     $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
     if($check !== false) {
-        echo "File is an image - " . $check["mime"] . ".";
+        
         $uploadOk = 1;
     } else {
-        echo "File is not an image.";
+        throw new Exception ( "File is not an image.");
         $uploadOk = 0;
     }
 }
-// Check if file already exists
-if (file_exists($target_file)) {
-    echo "Sorry, file already exists.";
-    $uploadOk = 0;
-}
+
 // Check file size
 if ($_FILES["fileToUpload"]["size"] > 5000000) {
-    echo "Sorry, your file is too large.";
+    throw new Exception ( "Sorry, your file is too large.");
     $uploadOk = 0;
 }
 // Allow certain file formats
 if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
 && $imageFileType != "gif" ) {
-    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+    throw new Exception ( "Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
     $uploadOk = 0;
 }
 // Check if $uploadOk is set to 0 by an error
 if ($uploadOk == 0) {
-    echo "Sorry, your file was not uploaded.";
+    throw new Exception ("Sorry, your file was not uploaded.");
 // if everything is ok, try to upload file
 } else {
 $pic= fopen ( $_FILES["fileToUpload"]["tmp_name"], "r");
 $temp = fread($pic,$_FILES["fileToUpload"]["size"]);
 $picture = new Picture();
 $picture -> object_id = 1;
+$picture -> mime = $check["mime"];
 $picture -> data = $temp;
 $picture -> save();
 
-    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-        echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
-    } else {
-        echo "Sorry, there was an error uploading your file.";
-    }
+fclose ($pic);
+unlink($_FILES["fileToUpload"]["tmp_name"]);
+
+echo json_encode(array('status' => 'ok'));
+
+
+
 }
+
+}catch (Exception $e){ echo $e->getMessage(); }
+
 
 });
 

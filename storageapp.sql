@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 24, 2014 at 08:39 AM
+-- Generation Time: Nov 27, 2014 at 12:28 PM
 -- Server version: 5.5.24-log
 -- PHP Version: 5.4.3
 
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `attributes` (
   `ID` int(11) NOT NULL,
   `Object_id` int(11) NOT NULL,
-  `Name` text NOT NULL,
+  `Name` text CHARACTER SET utf8 NOT NULL,
   `Discription` int(11) NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `Object_id` (`Object_id`),
@@ -99,10 +99,10 @@ CREATE TABLE IF NOT EXISTS `objects` (
   `Instorage` int(11) NOT NULL,
   `Condition_id` int(11) NOT NULL,
   `Assembly` int(11) NOT NULL,
-  `Discription` text NOT NULL,
+  `Discription` text CHARACTER SET ucs2 NOT NULL,
   `Location_id` int(11) NOT NULL,
   `Lastchange` datetime NOT NULL,
-  `Changeby` varchar(100) NOT NULL,
+  `Changeby` varchar(100) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID_2` (`ID`),
   KEY `Location_id` (`Location_id`),
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `objects` (
   KEY `ID` (`ID`),
   KEY `Changeby` (`Changeby`),
   KEY `Changeby_2` (`Changeby`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `objects`
@@ -119,7 +119,9 @@ CREATE TABLE IF NOT EXISTS `objects` (
 
 INSERT INTO `objects` (`ID`, `Type_id`, `Sum`, `Instorage`, `Condition_id`, `Assembly`, `Discription`, `Location_id`, `Lastchange`, `Changeby`) VALUES
 (1, 1, 10, 10, 1, 0, 'Höga stolar', 1, '2014-11-18 00:00:00', '1'),
-(2, 1, 30, 15, 1, 0, '', 1, '2014-11-18 00:00:00', '1');
+(2, 1, 30, 15, 1, 0, 'åäö', 1, '2014-11-18 00:00:00', '1'),
+(3, 1, 40, 15, 1, 0, 'Ã¤r det text', 1, '2014-11-18 00:00:00', '1'),
+(4, 1, 40, 15, 1, 0, 'Ã¤r det text', 1, '2014-11-18 00:00:00', '1');
 
 -- --------------------------------------------------------
 
@@ -130,10 +132,11 @@ INSERT INTO `objects` (`ID`, `Type_id`, `Sum`, `Instorage`, `Condition_id`, `Ass
 CREATE TABLE IF NOT EXISTS `pictures` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Object_id` int(11) NOT NULL,
-  `Data` text NOT NULL,
+  `Mime` tinytext CHARACTER SET utf8 NOT NULL,
+  `Data` longblob NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `Object_id` (`Object_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
 
 -- --------------------------------------------------------
 
@@ -142,9 +145,10 @@ CREATE TABLE IF NOT EXISTS `pictures` (
 --
 
 CREATE TABLE IF NOT EXISTS `sessions` (
-  `user` int(11) NOT NULL,
+  `user` varchar(100) NOT NULL,
   `Token` text NOT NULL,
-  `Lastseen` datetime NOT NULL
+  `Lastseen` datetime NOT NULL,
+  PRIMARY KEY (`user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -152,9 +156,7 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 --
 
 INSERT INTO `sessions` (`user`, `Token`, `Lastseen`) VALUES
-(0, 'af5945a39da11016dcce207223c336835f828c7571fb4f50bbaccc924b8f7209', '0000-00-00 00:00:00'),
-(0, '768d2353dac46f69bdea00d846bd24e9acef75da25c26140bb2b8592805a1c2c', '0000-00-00 00:00:00'),
-(0, '548c13a691c797ff27235ecf0e40e7a395ddb0e72fd8debe188b26f972da1881', '0000-00-00 00:00:00');
+('admin', '73c4e25849aef2a5e77fbdaa224e31c2e36280e51b0c0f0443bd44a2008d154d', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -187,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `Name` text NOT NULL,
   `Password` text NOT NULL,
   `Salt` text NOT NULL,
-  `Access` int(11) NOT NULL,
+  `Access` int(11) NOT NULL DEFAULT '1',
   `Email` text NOT NULL,
   PRIMARY KEY (`Username`),
   KEY `Username` (`Username`)
@@ -223,6 +225,12 @@ ALTER TABLE `objects`
 --
 ALTER TABLE `pictures`
   ADD CONSTRAINT `pictures_ibfk_1` FOREIGN KEY (`Object_id`) REFERENCES `objects` (`ID`);
+
+--
+-- Constraints for table `sessions`
+--
+ALTER TABLE `sessions`
+  ADD CONSTRAINT `sessions_ibfk_1` FOREIGN KEY (`user`) REFERENCES `users` (`Username`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
