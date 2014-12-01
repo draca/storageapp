@@ -1,25 +1,52 @@
-Storage app
-============
+Welcome to Blackbird
+=========
 
-Description
-----------------------------------
-App for keeping track of your storage area
+Blackbird is a lightweight PHP MVC framework, origionally created with inspiration from Ruby on Rails back in 2006.
+
+## Requirements
+- As this framework is very slim and no guides is provided, its expected that you have decent knowledge of PHP.
+- PHP 5.3
+- MySQL (You can switch to another database if you want to)
+
+## Getting started
+In either your Apache virtual-host or in your .htaccess file, specify which environment to run:
 
 
-Nodes
-----------------------------------
-runs on an apache server with mysql. Wamp fits the purpose, for now.
+    <VirtualHost *:80>
+
+        ServerName blackbird
+        DocumentRoot /path-to-blackbird/public
+
+        SetEnv ENVIRONMENT development
+
+        <Directory />
+                Order allow,deny
+                AllowOverride All
+                Allow from all
+        </Directory>
+
+    </VirtualHost>
 
 
-How to run
-----------------------------------
-- Clone this repository to a folder in your desktop
-- Set up wamp ( http://www.wampserver.com/en/#download-wrapper )
-- Make sure Skype and similar applications stay away from port 80
-- Once the server can start and run and be put online and all is green, edit the httpd.conf under Apache:
-- - Adjust the path to DocumentRoot to point at the root of the application ( angular-todo/app )
-- - Adjust the Directory below it to reflect the same path
-- - Make sure that the line LoadModule rewrite_module modules/mod_rewrite.so is not commented out
-- Go to localhost/phpmyadmin and create a new database named "todoapp"
-- Inside that database, go "Import", browse to the root of this repository on your computer and select the .sql file
-- Voila! Good to go! =)
+## Conventions
+
+Blackbird expects a strict relationship between your controllers and your views. This is done to make it easier to setup new controllers and actions, rather than worrying about configuring it.
+
+- A controller is declared with uppercase-first as such: **WelcomeController**
+- An action is defined within the controller as a public mehtod with the name of the action.
+- A view file is created in the folder /app/views/[controller]/[action].[format].php - /app/views/welcome/index.html.php
+
+
+Example welcome controller
+
+    <?php
+
+    class WelcomeController extends ApplicationController {
+
+        public function index() {
+          
+        }
+
+    }
+
+    ?>

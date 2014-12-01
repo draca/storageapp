@@ -1,0 +1,55 @@
+body {
+    background: url('../img/bg_11.png') repeat-x;
+    font-family: "trebuchet ms",arial,sans-serif;
+    font-size: 16px;
+}
+
+header {
+    height: 165px;
+    padding: 0 20px;
+}
+
+footer {
+    border-top: 5px solid #2670b1;
+    padding: 20px;
+}
+
+section {
+    padding: 20px;
+}
+
+table {
+    width: 100%;
+    background: #fff;
+    margin: 1em 0;
+    border: 1px solid #d0d0d0;
+    box-shadow: none;
+    border-radius: .25rem;
+    color: rgba(0,0,0,.8);
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+table thead th {
+    text-align: left;
+    border-bottom: 1px solid #d4d4d5;
+    background-color: #e6f3fb;
+    padding: 5px;
+}
+
+table thead th:first-child {
+    border-radius: .25rem 0 0;
+}
+
+table thead th:last-child {
+    border-radius: 0 .25rem 0 0;
+}
+
+table tr td {
+    border-top: 1px solid #d4d4d5;
+    padding: 5px;
+}
+
+table tr:first-child td {
+    border-top: none;
+}
