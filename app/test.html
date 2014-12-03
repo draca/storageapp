@@ -1,0 +1,19 @@
+$.ajax({
+  url: "/api/objects/",
+  data: {
+  },
+  success: function( data ) {
+   txt = "Möbel Lista<Br/>" ;
+    data.forEach(function(entry) {
+    txt= txt + "<table>";
+    txt= txt +"<tr><td>ID:</td> <td>"+entry.id+"</td></tr>";
+    txt= txt +"<tr><td>Antal:</td> <td>"+entry.sum+"</td></tr>";
+    txt= txt + "<tr><td>I lager:</td> <td>"+entry.instorage+"</td></tr>";
+    txt= txt +"<tr><td>Typ:</td> <td>"+entry.type_id+"</td></tr>";
+    txt= txt +"<tr><td>Beskrivning:</td> <td>"+entry.discription+"</td></tr>";
+    txt= txt +"<tr><td>Plats:</td> <td>"+entry.location_id+"</td></tr>";
+    txt= txt +"</table>";
+
+    $( "#section" ).html( txt );
+  }
+});

@@ -1,54 +1,49 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="app">
-<head>
-	<title>Forshaga Föråd</title>
-	<meta charset="latin1_swedish_ci" />
+<html>
+  <head>
+    <meta charset="latin1_swedish_ci">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title></title>
+      <meta name="description" content="">
+      <meta name="viewport" content="width=device-width">
+      <link rel="stylesheet" href="/assets/css/normalize.css">
+      <link rel="stylesheet" href="/assets/css/app.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  </head>
+  <body>
     
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="/css/normalize.css">
-    <link rel="stylesheet" href="/css/app.css">
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <header>
+      <img src="/assets/img/logga.png" alt="">
+    </header>
 
-
-</head>
-
-
-<header>
-    <img src="/img/logga.png" alt="">
-</header>
-<body>
-
-    
-
-
-
+<content> 
 <script> 
+var txt = "";
    $.getJSON("/api/objects/",function(data,status){
-    document.write("Möbel Lista<Br/>");
+
+    txt= txt + "<table>";
+    txt= txt + "<tr><td>ID:</td><td>Antal:</td><td>I lager:</td><td>Typ:</td><td>Beskrivning:</td><td>Plats:</td></tr>";
     data.forEach(function(entry) {
-    document.write("<table>");
-    document.write("<tr><td>ID:</td> <td>"+entry.id+"</td></tr>");
-    document.write("<tr><td>Antal:</td> <td>"+entry.sum+"</td></tr>");
-    document.write("<tr><td>I lager:</td> <td>"+entry.instorage+"</td></tr>");
-    document.write("<tr><td>Typ:</td> <td>"+entry.type_id+"</td></tr>");
-    document.write("<tr><td>Beskrivning:</td> <td>"+entry.discription+"</td></tr>");
-    document.write("<tr><td>Plats:</td> <td>"+entry.location_id+"</td></tr>");
-    document.write("</table>");
+    txt= txt +"<tr>"
+    txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.sum+"</td>" + "<td>"+entry.instorage+"</td>" +"<td>"+entry.type_id+"</td>" +"<td>"+entry.discription+"</td>" +"<td>"+entry.location_id+"</td>"
+
+    
+    txt= txt +"</tr>"
+    
 });
-  });
+txt= txt +"</table>";
+$('content').append('<section> Möbel Lista </br>' + txt + '</section>');
+});
+
+
 </script>
 
+</content> 
+   
 
- 
-
-
-
-</body>
-
-   <footer>
+    <footer>
       footer
     </footer>
 
+  </body>
 </html>
