@@ -54,8 +54,7 @@ function make_session($username)
         $session = Session::find_by_pk($username);
     } catch(Exception $e)
         {
-           if( $session == null )
-           {
+          
 
                 $session = new Session();
                 $session-> token = hash ( "sha256" ,get_random_salt(),false);
@@ -63,7 +62,7 @@ function make_session($username)
 
                 $session->save();
 
-            }
+            
         }
         return $session -> token;
 }
@@ -73,7 +72,7 @@ function kda($password , $salt)
     $temp = $password;
     for($i=0; $i<200; $i++)
     {
-        $temp = hash ( "sha256" , $temp + $salt , false  );
+        $temp = hash("sha256",$temp . $salt ) ;
     }
 
     return $temp;
@@ -195,7 +194,6 @@ $app->post('/user/authenticate', function () use ($app) {
         $payload = json_decode($app->request()->getBody());
 
 
-
         $post = User::find_by_pk($payload->username);
 
 
@@ -204,6 +202,9 @@ $app->post('/user/authenticate', function () use ($app) {
         {
             try {
                 $session = Session::find_by_pk($post->username);
+                $token = $session -> token;
+
+
             } catch(Exception $e) {
 
                 $token = make_session($post->username);

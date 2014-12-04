@@ -9,6 +9,29 @@
       <link rel="stylesheet" href="/assets/css/normalize.css">
       <link rel="stylesheet" href="/assets/css/app.css">
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="/assets/scripts/functions.js"></script>
+
+
+
+<script>
+
+$(document).ready(function(){
+
+$("#adminpanel").hide();
+
+
+
+});
+
+
+//temp login
+
+
+  login("admin","admin");
+  var token = getCookie("token");
+</script>
+
+
   </head>
   <body>
     
@@ -17,11 +40,24 @@
     </header>
 
 <content> 
+
+<a href="javascript:$('#adminpanel').show();;">Öppna admin gransnitt</a>
+<div id="adminpanel">
+
+  Hidden text
+
+
+</div>
+
+
+
+<div id="objectlist">
+
 <script> 
 var txt = "";
    $.getJSON("/api/objects/",function(data,status){
 
-    txt= txt + "<table>";
+    txt= txt + "<table >";
     txt= txt + "<tr><td>ID:</td><td>Antal:</td><td>I lager:</td><td>Typ:</td><td>Beskrivning:</td><td>Plats:</td></tr>";
     data.forEach(function(entry) {
     txt= txt +"<tr>"
@@ -32,11 +68,18 @@ var txt = "";
     
 });
 txt= txt +"</table>";
-$('content').append('<section> Möbel Lista </br>' + txt + '</section>');
+$('#objectlist').append('<section> Möbellista </br>' + txt + '</section>');
 });
 
 
+
+
 </script>
+
+</div>
+
+
+
 
 </content> 
    
