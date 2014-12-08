@@ -29,11 +29,11 @@ router::add(array(
     //   'to'     => 'user/index',
     // ),
 
-    // 'user_show'  => array(
-    //   'match'  => 'user/:id',
-    //   'to'     => 'user/show',
-    //   'method' => 'get',
-    // ),
+    'user_show'  => array(
+      'match'  => 'user/:id',
+      'to'     => 'user/show',
+      'method' => 'get',
+    ),
 
     // 'user_edit'  => array(
     //   'match'  => 'user/:id',

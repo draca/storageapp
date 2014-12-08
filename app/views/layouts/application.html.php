@@ -13,6 +13,10 @@
     
     <header>
       <img src="/assets/img/logga.png" alt="">
+      <ul>
+        <li><a href="#">a</a></li>
+        <li><a href="#">b</a></li>
+      </ul>
     </header>
 
     <section>
