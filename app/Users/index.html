@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="latin1_swedish_ci">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
       <title></title>
       <meta name="description" content="">
@@ -14,6 +14,7 @@
 
 
 <script>
+
 
 
 
@@ -49,20 +50,29 @@
 
 <script> 
 var txt = "";
-   $.getJSON("/api/objects/",function(data,status){
+
+   $.getJSON("/api/user" ,function(data,status){
 
     txt= txt + "<table >";
-    txt= txt + "<tr><td>Referensnummer:</td><td>Antal:</td><td>I lager:</td><td>Typ:</td><td>Beskrivning:</td><td>Plats:</td><td></td><td></td></tr>";
+    txt= txt + "<tr><td>Anv&auml;ndarnamn:</td><td>Namn:</td><td>E-mail:</td><td>R&auml;ttigheter:</td></tr>";
     data.forEach(function(entry) {
-    txt= txt +"<tr>"
-    txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.sum+"</td>" + "<td>"+entry.instorage+"</td>" +"<td>"+entry.type_id+"</td>" +"<td>"+entry.discription+"</td>" +"<td>"+entry.location_id+"</td>" +'<td><a href="http://localhost/details.html?id='+entry.id+'">Detailjer</a> </td>' + "<td> <a href=\"javascript:alert('todo');;\">Ta bort</a></td>"
+    var ratt="";
+      if(entry.access == 1){ ratt = "L&auml;gga till";}
+        else if(entry.access == 2){ratt = "L&auml;gga till och redigera";}
+          else if(entry.access == 3){ratt = "L&auml;gga till/redigera/ta bort";}
+           else if(entry.access == 4){ratt = "L&auml;gga till/redigera/ta bort/hantera anv&auml;ndare";}
+           else { ratt = "okänt"; }
+
+
+    txt= txt +"<tr>";
+    txt= txt + "<td>"+entry.username+"</td>" + "<td>"+entry.name+"</td>" + "<td>"+entry.email+"</td>" +"<td>"+ratt+"</td>";
 
     
-    txt= txt +"</tr>"
+    txt= txt +"</tr>";
     
 });
 txt= txt +"</table>";
-$('#objectlist').append('<section> M&ouml;bellista </br>' + txt + '</section>');
+$('#objectlist').append('<section> Anv&aumlndarlista </br>' + txt + '</section>');
 });
 
 

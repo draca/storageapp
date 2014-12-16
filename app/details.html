@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title></title>
+      <meta name="description" content="">
+      <meta name="viewport" content="width=device-width">
+      <link rel="stylesheet" href="/assets/css/normalize.css">
+      <link rel="stylesheet" href="/assets/css/app.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="/assets/scripts/functions.js"></script>
+
+
+
+<script>
+
+
+
+
+
+  login("admin","admin");
+  var token = getCookie("token");
+</script>
+
+
+  </head>
+  <body>
+    
+    <header>
+      <img src="/assets/img/logga.png" alt="">
+      <ul>
+        <li><a href="/">M&ouml;bler</a></li>
+        <li><a href="/locations/index.html">Platser</a></li>
+        <li><a href="/types/index.html">M&ouml;beltyper</a></li>
+        <li><a href="/conditions/index.html">Skick</a></li>
+        <li><a href="/users/index.html">Anv&auml;ndare</a></li>
+      </ul>
+    </header>
+
+<content> 
+<div id="pictures">
+
+</div> 
+
+
+
+
+
+<div id="objectlist">
+
+<script> 
+var urlvars = getUrlVars();
+
+var txt = "";
+
+   $.getJSON("/api/object/"+ urlvars["id"] + "/imagelist",function(data,status){
+
+    txt = "";
+    if(data.length == 0){txt = "Inga bilder för detta object";}
+    txt += "<table><tr>";
+     data.forEach(function(entry) {
+
+      txt +=  '<td><A HREF="/api/image/'+entry.id +'"><IMG HEIGHT=100 SRC="/api/image/'+entry.id +'"></A></td>'
+    
+});
+txt += "</table></tr>";
+$('#pictures').append('<section> Bilder </br>' + txt + '</section>');
+});
+
+
+
+   $.getJSON("/api/objects/"+ urlvars["id"],function(data,status){
+
+
+    txt = "";
+  if(data.length == 0){txt = "objektet hittades inte";}
+
+
+    txt= txt + "<table >";
+    
+    data.forEach(function(entry) {
+    txt= txt +"<tr><td>Referensnummer:</td><td>"+entry.id+"</td></tr>"
+    txt= txt +"<tr><td>Typ:</td><td>"+entry.type_id+"</td></tr>"
+    txt= txt +"<tr><td>Skick:</td><td>"+entry.condition_id+"</td></tr>"
+    txt= txt +"<tr><td>Beskrivning:</td><td>"+entry.discription+"</td></tr>"
+    txt= txt +"<tr><td>Totalt antal:</td><td>"+entry.sum+"</td></tr>"
+    txt= txt +"<tr><td>Kvar i lager:</td><td>"+entry.instorage+"</td></tr>"
+    txt= txt +"<tr><td>Plats:</td><td>"+entry.location_id+"</td></tr>"
+    txt= txt +"<tr><td>Senast &auml;ndrad:</td><td>"+entry.lastchange+"</td></tr>"
+    txt= txt +"<tr><td>&Auml;ndrad av:</td><td>"+entry.changeby+"</td></tr>"
+
+ 
+});
+
+    txt= txt +"</table>";
+
+
+$('#objectlist').append('<section> Detaljer </br>' + txt + '</section>');
+});
+
+   $.getJSON("/api/attributes/object/"+ urlvars["id"],function(data,status){
+
+
+    txt = "";
+  if(data.length == 0){txt = "";}
+
+
+    txt= txt + "<table>";
+    
+    data.forEach(function(entry) {
+    txt= txt +"<tr><td>" + entry.name + ":</td><td>"+entry.value+"</td></tr>";
+
+
+ 
+});
+
+    txt= txt +"</table>";
+$('#attributes').append('<section> &Ouml;vrig informaion </br>' + txt + '</section>');
+});
+
+
+</script>
+
+</div>
+
+<div id="attributes">
+
+
+
+</div>
+
+
+</content> 
+   
+
+    <footer>
+      footer
+    </footer>
+
+  </body>
+</html>

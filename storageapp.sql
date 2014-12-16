@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 27, 2014 at 12:28 PM
+-- Generation Time: Dec 12, 2014 at 01:50 PM
 -- Server version: 5.5.24-log
 -- PHP Version: 5.4.3
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `forshaga_storage`
+-- Database: `storageapp`
 --
 
 -- --------------------------------------------------------
@@ -27,14 +27,24 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `attributes` (
-  `ID` int(11) NOT NULL,
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Object_id` int(11) NOT NULL,
   `Name` text CHARACTER SET utf8 NOT NULL,
-  `Discription` int(11) NOT NULL,
+  `Value` text CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `Object_id` (`Object_id`),
   KEY `Object_id_2` (`Object_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `attributes`
+--
+
+INSERT INTO `attributes` (`ID`, `Object_id`, `Name`, `Value`) VALUES
+(1, 3, 'Sithojd', '1m'),
+(2, 3, 'Farg', 'Vit'),
+(3, 3, 'Bredd', '30cm'),
+(4, 3, 'Bredd', '30cm');
 
 -- --------------------------------------------------------
 
@@ -136,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `pictures` (
   `Data` longblob NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `Object_id` (`Object_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -165,11 +175,11 @@ INSERT INTO `sessions` (`user`, `Token`, `Lastseen`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `types` (
-  `ID` int(11) NOT NULL,
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` text NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `ID` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `types`
@@ -200,7 +210,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`Username`, `Name`, `Password`, `Salt`, `Access`, `Email`) VALUES
-('admin', '', 'ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d', 'd3e8eeffda34c15c7e4221b83105a0eac538c747fb8a7cd4c5b4a9a4831948e9', 1, 'test@test.se');
+('admin', 'Admin Admin', 'd3c19f2db47d799dfe0c6f6e0fff83e686c94b60aa603824f76188046edbdb18', 'd3e8eeffda34c15c7e4221b83105a0eac538c747fb8a7cd4c5b4a9a4831948e9', 4, 'test@test.se');
 
 --
 -- Constraints for dumped tables

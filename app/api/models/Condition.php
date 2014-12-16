@@ -1,6 +1,6 @@
 <?php
 
-class Conditions extends ActiveRecord\Model {
+class Condition extends ActiveRecord\Model {
 	static $table_name = 'conditions';
 }
 

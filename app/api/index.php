@@ -21,7 +21,7 @@ require 'ActiveRecord.php';
  ActiveRecord\Config::initialize(function($cfg) {
     $cfg->set_model_directory('models');
     $cfg->set_connections(array(
-         'development' => 'mysql://root@127.0.0.1/forshaga_storage'
+         'development' => 'mysql://root@127.0.0.1/storageapp'
         //'development' => 'mysql://m4314_riman:siberian@localhost/m43147_db'
     ));
  });
@@ -45,6 +45,11 @@ $app->contentType( 'application/json' );
 //Support functions
 
 /*************************************************************************************************************************************/
+
+function now()
+{
+    return (new \DateTime())->format('Y-m-d H:i:s');
+}
 
 function make_session($username)
 {
@@ -390,7 +395,7 @@ $app->get('/objects/', function () {
 
     try {
      
-        echo arToJson( Objects::all() );
+        echo arToJson( Objects::all());
 
     } catch (Exception $e) {
         echo $e->getMessage();
@@ -408,6 +413,7 @@ $app->post('/objects/:token',function ($token) use ($app) {
 
 
         $object = new Objects($payload);
+        $object -> lastchange = now();
         $object -> save();
 
         echo json_encode(array('status' => 'ok'));
@@ -454,6 +460,7 @@ $app->put('/objects/:id/:token',function ($id,$token) use ($app) {
             $object -> $k = $v;
             echo "\$a[$k] => $v.\n";
         }
+        $object -> lastchange = (new \DateTime())->format('Y-m-d H:i:s');
        $object -> save();
         echo json_encode(array('status' => 'ok'));
 
@@ -504,7 +511,7 @@ $app->post('/conditions/:token',function ($token) use ($app) {
         $user = User::find_by_pk($session->username);
         if($user -> access < 1){ throw new Exception("Access Denied!!");}
 
-        $object = new Conditions($payload);
+        $object = new Condition($payload);
         $object -> save();
 
         echo json_encode(array('status' => 'ok'));
@@ -523,7 +530,7 @@ $app->get('/conditions/:id',function ($id) use ($app) {
 
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
-        $object=Conditions::all('all', array('conditions' => array('id' => $id)));
+        $object=Condition::all('all', array('conditions' => array('id' => $id)));
 
        echo arToJson( $object ) ;
 
@@ -541,7 +548,7 @@ $app->put('/conditions/:id/:token',function ($id, $token) use ($app) {
         $user = User::find_by_pk($session->username);
         if($user -> access < 2){ throw new Exception("Access Denied!!");}
 
-        $object=Conditions::all('first', array('conditions' => array('id' => $id)));
+        $object=Condition::all('first', array('conditions' => array('id' => $id)));
         $object = $object[0];
 
         foreach ($payload as $k => $v) 
@@ -583,7 +590,7 @@ $app->get('/attributes/object/:id', function ($id) {
 
     try {
      
-        echo arToJson( Condition::all('all', array('conditions' => array('object_id' => $id))) );
+        echo arToJson( Attribute::all('all', array('conditions' => array('object_id' => $id))) );
 
     } catch (Exception $e) {
         echo $e->getMessage();
@@ -775,7 +782,7 @@ $app->get('/type/', function ($id) {
 
     try {
      
-        echo arToJson( Location::all( ));
+        echo arToJson( Type::all( ));
 
     } catch (Exception $e) {
         echo $e->getMessage();
@@ -897,10 +904,10 @@ $app->get('/object/:id/imagelist',function($id) use ($app)
 
 
 
-$app->post('/image/:id',function() use ($app) {
+$app->post('/image/:id',function($id) use ($app) {
 
 
-
+$token = $_COOKIE["token"];
 $payload = json_decode($app->request()->getBody());
 $session = is_session_active($token);
 $user = User::find_by_pk($session->username);
@@ -928,11 +935,6 @@ if ($_FILES["fileToUpload"]["size"] > 5000000) {
     $uploadOk = 0;
 }
 // Allow certain file formats
-if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-&& $imageFileType != "gif" ) {
-    throw new Exception ( "Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
-    $uploadOk = 0;
-}
 // Check if $uploadOk is set to 0 by an error
 if ($uploadOk == 0) {
     throw new Exception ("Sorry, your file was not uploaded.");

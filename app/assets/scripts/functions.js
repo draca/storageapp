@@ -1,3 +1,4 @@
+
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -43,4 +44,66 @@ function login(username, pw)
 
 
     
+}
+
+
+function jsonify(object)
+{
+    var json = "{"; 
+    $.each(object, function(key, value){
+    console.log(key + ": " + object[key]);
+
+
+});
+
+
+
+}
+
+
+
+
+function sendData(data,url)
+{
+
+var token = getCookie("token");
+
+    
+
+       $.ajax({
+            type: "POST",
+            url: "/api/objects/"+ token,
+            data:  data,
+            dataType: "json",
+            success: function(msg) {
+               
+
+                          },
+            error: function(xhr, ajaxOptions, thrownError) { alert("fel!");}
+
+        });
+
+
+
+
+
+}
+
+
+
+function _getRow(data, type) {
+ var tr = $('<tr></tr>');
+ $.each(data, function(d) {
+  tr.append($('<' + type + '/>' + d + '</' + type + '>'));
+ });
+ return tr;
+}
+
+
+function getUrlVars() {
+    var map = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        map[key] = value;
+    });
+    return map;
 }

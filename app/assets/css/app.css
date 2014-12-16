@@ -7,6 +7,48 @@ body {
 header {
     height: 165px;
     padding: 0 20px;
+    position: relative;
+}
+
+header ul {
+    list-style-type: none;
+    overflow: hidden;
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+    margin: 0;
+    background-color: #dee3e7;
+    border-radius: 5px 5px 0 0;
+    padding: 0;
+    height: 30px;
+    border-top: 1px solid white;
+    border-right: 1px solid white;
+    border-left: 1px solid white;
+}
+
+header ul li {
+    display: inline;
+    padding: 5px;
+}
+
+header ul li a {
+    text-decoration: none;
+    padding: 0 10px 0 0;
+    line-height: 30px;
+    color: #010000;
+}
+
+header ul li a:first-child {
+    padding-left: 10px;
+}
+
+header ul li:hover {
+    background-color: #105ea6;
+    cursor: pointer;
+}
+
+header ul li:hover a {
+    color: #fffefe;
 }
 
 footer {
