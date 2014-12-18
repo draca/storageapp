@@ -13,7 +13,15 @@
 
 
 
+<script>
 
+
+
+
+
+
+
+</script>
 
 
   </head>
@@ -35,45 +43,17 @@
     </header>
 
 <content> 
+<form action="#" onsubmit="return login(this);" method="post">
 
-<a href="/types/add.html">L&auml;gg Till</a>
-<div id="adminpanel">
+Anv&auml;darnamn:<br>
+<input type="text" name="username">
+<br>
+L&ouml;senord:<br>
+<input type="text" name="password">
+<br>
+<input type="submit" value="Submit">
 
-  
-
-
-</div>
-
-
-
-<div id="objectlist">
-
-<script> 
-var txt = "";
-   $.getJSON("/api/type/",function(data,status){
-
-    txt= txt + "<table >";
-    txt= txt + "<tr><td>ID:</td><td>Namn:</td></tr>";
-    data.forEach(function(entry) {
-    txt= txt +"<tr>"
-    txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.name+"</td>";
-
-    
-    txt= txt +"</tr>";
-    
-});
-txt= txt +"</table>";
-$('#objectlist').append('<section> M&ouml;beltyper </br>' + txt + '</section>');
-});
-
-
-
-
-</script>
-
-</div>
-
-
+</form>
 
 
 </content> 

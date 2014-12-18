@@ -3,7 +3,7 @@
   <head>
     <meta charset="latin1_swedish_ci">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title></title>
+      <title>Preserven</title>
       <meta name="description" content="">
       <meta name="viewport" content="width=device-width">
       <link rel="stylesheet" href="/assets/css/normalize.css">
@@ -13,22 +13,6 @@
 
 
 
-<script>
-
-$(document).ready(function(){
-
-$("#adminpanel").hide();
-
-
-
-});
-
-
-
-
-  login("admin","admin");
-  var token = getCookie("token");
-</script>
 
 
   </head>
@@ -36,24 +20,23 @@ $("#adminpanel").hide();
     
     <header>
       <img src="/assets/img/logga.png" alt="">
-      <ul>
+      <ul id="menu">
         <li><a href="/">M&ouml;bler</a></li>
         <li><a href="/locations/index.html">Platser</a></li>
         <li><a href="/types/index.html">M&ouml;beltyper</a></li>
         <li><a href="/conditions/index.html">Skick</a></li>
         <li><a href="/users/index.html">Anv&auml;ndare</a></li>
       </ul>
+        <script>
+       if(getCookie("token")!=""){ $("#menu").append( "<li><a href=\"javascript:logout();;\">Logga ut</a></li>");}
+       else{ $("#menu").append( "<li><a href=\"/login.html\">Logga in</a></li>"); } 
+      </script>
     </header>
 
 <content> 
 
-<a href="javascript:alert('todo');;">L&auml;gg Till</a>
-<div id="adminpanel">
+<a href="/conditions/add.html">L&auml;gg Till</a>
 
-  
-
-
-</div>
 
 
 
@@ -67,7 +50,7 @@ var txt = "";
     txt= txt + "<tr><td>ID:</td><td>Namn:</td><td>Sorterings v&auml;rde:</td><td>Beskrivning:</td></tr>";
     data.forEach(function(entry) {
     txt= txt +"<tr>"
-    txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.name+"</td>" + "<td>"+entry.value+"</td>" +"<td>"+entry.discription+"</td>" ;
+    txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.name+"</td>" + "<td>"+entry.value+"</td>" +"<td>"+entry.discription+"</td>";
 
     
     txt= txt +"</tr>";

@@ -235,8 +235,9 @@ $app->delete('/user/authenticate', function () use ($app){
 
 
     try{
+        $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
-        $session = is_session_active($payload->token);
+        $session = is_session_active($token);
 
         if($session -> username == ""){ throw new Exception("Not found");}
 
@@ -255,9 +256,10 @@ $app->delete('/user/authenticate', function () use ($app){
 
 
 
-$app->post('/user/:token', function ($token) use ($app) {
+$app->post('/users', function ($token) use ($app) {
 
     //var_dump();
+    $token = $_COOKIE["token"];
     try {
 
         $session = is_session_active($token);
@@ -267,7 +269,7 @@ $app->post('/user/:token', function ($token) use ($app) {
 
         $post = new User();
         $post->email    = $payload->email;
-        $post->name    = "";
+        $post->name    =  $payload->name;
         $post->username = $payload->username;
         $post->salt = hash ( "sha256",get_random_salt(),false);
         $post->password = kda($payload->password , $post->salt);
@@ -283,10 +285,10 @@ $app->post('/user/:token', function ($token) use ($app) {
 });
 
 // PUT route
-$app->put('/user/:id/:token', function ($id,$token) use ($app)  {
+$app->put('/user/:id', function ($id) use ($app)  {
     try {
 
-
+        $token = $_COOKIE["token"];
         $session = is_session_active($token);
         $user = User::find_by_pk($session->username);
         if($user -> access < 4){ throw new Exception("Access Denied!!");}
@@ -326,10 +328,10 @@ $app->put('/user/:id/:token', function ($id,$token) use ($app)  {
 
 
 // PUT route
-$app->put('/user/:token', function ($token) use ($app)  {
+$app->put('/user', function () use ($app)  {
     try {
 
-
+        $token = $_COOKIE["token"];
         $session = is_session_active($token);
         $payload = json_decode($app->request()->getBody());
 
@@ -365,9 +367,9 @@ $app->put('/user/:token', function ($token) use ($app)  {
 });
 
 // DELETE route
-$app->delete('/user/:token', function ($token) use ($app) {
+$app->delete('/user', function ($token) use ($app) {
    try {
-
+        $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
         $post = User::find_by_pk($session->username);
@@ -402,7 +404,8 @@ $app->get('/objects/', function () {
     }
 
 });
-$app->post('/objects/:token',function ($token) use ($app) {
+$app->post('/objects/',function ($token) use ($app) {
+    $token = $_COOKIE["token"];
    try { 
 
         $payload = json_decode($app->request()->getBody());
@@ -414,6 +417,7 @@ $app->post('/objects/:token',function ($token) use ($app) {
 
         $object = new Objects($payload);
         $object -> lastchange = now();
+        $object -> changeby = $user -> username;
         $object -> save();
 
         echo json_encode(array('status' => 'ok'));
@@ -472,15 +476,18 @@ $app->put('/objects/:id/:token',function ($id,$token) use ($app) {
 
 $app->delete('/objects/:id',function ($id) use ($app) {
    try { 
-
+        $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
         $user = User::find_by_pk($session->username);
         if($user -> access < 2){ throw new Exception("Access Denied!!");}
 
 
-        $object=Objects::all('all', array('conditions' => array('id' => $id)));
+     
+        $object=Objects::find_by_pk($id);
         $object -> delete();
+       
+
 
         echo json_encode(array('status' => 'ok'));
 
@@ -496,16 +503,16 @@ $app->get('/conditions/', function () {
 
     try {
      
-        echo arToJson( Conditions::all() );
+        echo arToJson( Condition::all() );
 
     } catch (Exception $e) {
         echo $e->getMessage();
     }
 
 });
-$app->post('/conditions/:token',function ($token) use ($app) {
+$app->post('/conditions',function () use ($app) {
    try { 
-
+        $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
         $user = User::find_by_pk($session->username);
@@ -540,9 +547,9 @@ $app->get('/conditions/:id',function ($id) use ($app) {
     }
 });
 
-$app->put('/conditions/:id/:token',function ($id, $token) use ($app) {
+$app->put('/conditions/:id',function ($id) use ($app) {
    try { 
-
+        $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
         $user = User::find_by_pk($session->username);
@@ -565,9 +572,9 @@ $app->put('/conditions/:id/:token',function ($id, $token) use ($app) {
     }
 });
 
-$app->delete('/conditions/:id/:token',function ($id) use ($app) {
+$app->delete('/conditions/:id',function ($id) use ($app) {
    try { 
-
+        $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
         $user = User::find_by_pk($session->username);
@@ -597,9 +604,9 @@ $app->get('/attributes/object/:id', function ($id) {
     }
 
 });
-$app->post('/attributes/:token',function ($token) use ($app) {
+$app->post('/attributes',function () use ($app) {
    try { 
-
+        $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
         $user = User::find_by_pk($session->username);
@@ -635,9 +642,9 @@ $app->get('/attributes/:id',function ($id) use ($app) {
     }
 });
 
-$app->put('/attributes/:id/:token',function ($id,$token) use ($app) {
+$app->put('/attributes/:id',function ($id) use ($app) {
    try { 
-
+        $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
         $user = User::find_by_pk($session->username);
@@ -661,9 +668,9 @@ $app->put('/attributes/:id/:token',function ($id,$token) use ($app) {
     }
 });
 
-$app->delete('/attributes/:id/:token',function ($id, $token) use ($app) {
+$app->delete('/attributes/:id',function ($id) use ($app) {
    try { 
-
+        $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
         $user = User::find_by_pk($session->username);
@@ -694,15 +701,17 @@ $app->get('/locations/', function () {
     }
 
 });
-$app->post('/locations/:token',function ($token) use ($app) {
+$app->post('/locations',function () use ($app) {
    try { 
-
+        $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
         $user = User::find_by_pk($session->username);
         if($user -> access < 2){ throw new Exception("Access Denied!!");}
 
         $object = new Location($payload);
+        $object -> changeby = $user ->username;
+        $object -> lastchange = now();
         $object -> save();
 
         echo json_encode(array('status' => 'ok'));
@@ -731,9 +740,9 @@ $app->get('/locations/:id',function ($id) use ($app) {
     }
 });
 
-$app->put('/locations/:id/:token',function ($id,$token) use ($app) {
+$app->put('/locations/:id',function ($id) use ($app) {
    try { 
-
+        $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
         $user = User::find_by_pk($session->username);
@@ -757,16 +766,16 @@ $app->put('/locations/:id/:token',function ($id,$token) use ($app) {
     }
 });
 
-$app->delete('/locations/:id/:token',function ($id,$token) use ($app) {
+$app->delete('/locations/:id',function ($id) use ($app) {
    try { 
-
+        $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
         $user = User::find_by_pk($session->username);
         if($user -> access < 3){ throw new Exception("Access Denied!!");}
 
 
-        $object=Location::all('all', array('conditions' => array('id' => $id)));
+        $object=Location::find_by_pk($id);
         $object -> delete();
 
         echo json_encode(array('status' => 'ok'));
@@ -789,15 +798,15 @@ $app->get('/type/', function ($id) {
     }
 
 });
-$app->post('/type/:token',function ($token) use ($app) {
+$app->post('/types',function ($token) use ($app) {
    try { 
-
+        $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
                 $session = is_session_active($token);
         $user = User::find_by_pk($session->username);
         if($user -> access < 1){ throw new Exception("Access Denied!!");}
 
-        $object = new Location($payload);
+        $object = new Type($payload);
         $object -> save();
 
         echo json_encode(array('status' => 'ok'));
@@ -811,7 +820,7 @@ $app->post('/type/:token',function ($token) use ($app) {
 
 // Location routes
 
-$app->get('/type/:id',function ($id) use ($app) {
+$app->get('/types/:id',function ($id) use ($app) {
    try { 
 
         $payload = json_decode($app->request()->getBody());
@@ -826,9 +835,9 @@ $app->get('/type/:id',function ($id) use ($app) {
     }
 });
 
-$app->put('/type/:id/:token',function ($id,$token) use ($app) {
+$app->put('/types/:id',function ($id,$token) use ($app) {
    try { 
-
+        $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
         $user = User::find_by_pk($session->username);
@@ -850,9 +859,9 @@ $app->put('/type/:id/:token',function ($id,$token) use ($app) {
     }
 });
 
-$app->delete('/type/:id/:token',function ($id,$token) use ($app) {
+$app->delete('/types/:id',function ($id,$token) use ($app) {
    try { 
-
+        $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
         $user = User::find_by_pk($session->username);

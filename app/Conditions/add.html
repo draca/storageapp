@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="latin1_swedish_ci">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
       <title>Preserven</title>
       <meta name="description" content="">
@@ -10,7 +10,6 @@
       <link rel="stylesheet" href="/assets/css/app.css">
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="/assets/scripts/functions.js"></script>
-
 
 
 
@@ -36,45 +35,20 @@
 
 <content> 
 
-<a href="/types/add.html">L&auml;gg Till</a>
-<div id="adminpanel">
+<form action="#" onsubmit="return addCondition(this);">
 
-  
+Namn:<br>
+<input type="text" name="name">
+<br>
+Sortering Värde:<br>
+<input type="text" name="svalue">
+<br>
+Beskrivning:<br>
+<input type="text" name="discription">
+<br>
+<input type="submit" value="Submit">
 
-
-</div>
-
-
-
-<div id="objectlist">
-
-<script> 
-var txt = "";
-   $.getJSON("/api/type/",function(data,status){
-
-    txt= txt + "<table >";
-    txt= txt + "<tr><td>ID:</td><td>Namn:</td></tr>";
-    data.forEach(function(entry) {
-    txt= txt +"<tr>"
-    txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.name+"</td>";
-
-    
-    txt= txt +"</tr>";
-    
-});
-txt= txt +"</table>";
-$('#objectlist').append('<section> M&ouml;beltyper </br>' + txt + '</section>');
-});
-
-
-
-
-</script>
-
-</div>
-
-
-
+</form>
 
 </content> 
    
