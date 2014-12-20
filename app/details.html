@@ -13,14 +13,7 @@
 
 
 
-<script>
-
-
-
-
-
-
-</script>
+        
 
 
   </head>
@@ -46,7 +39,19 @@
 
 </div> 
 
-
+<div id="upload">
+<section>
+  <table>
+    <tr><td>
+    <form action="#" method="post" enctype="multipart/form-data" onsubmit="return uploadImage(this);">
+    
+    <input type="file" name="fileToUpload" id="fileToUpload">
+    <input type="submit" value="Upload Image" name="submit">
+    </form>
+</table>
+</tr></td>
+</section>
+</div>
 
 
 
@@ -67,7 +72,21 @@ var txt = "";
       txt +=  '<td><A HREF="/api/image/'+entry.id +'"><IMG HEIGHT=100 SRC="/api/image/'+entry.id +'"></A></td>'
     
 });
-txt += "</table></tr>";
+txt += "</tr>";
+txt += "<tr>";
+data.forEach(function(entry) {
+
+      txt +=  "<td> <a href=\"javascript:deletePicture('"+entry.id+"');;\">Ta bort</a></td>"
+    
+});
+
+
+
+
+
+txt += "</tr>";
+
+txt += "</table>";
 $('#pictures').append('<section> Bilder </br>' + txt + '</section>');
 });
 
@@ -90,6 +109,7 @@ $('#pictures').append('<section> Bilder </br>' + txt + '</section>');
     txt= txt +"<tr><td>Totalt antal:</td><td>"+entry.sum+"</td></tr>"
     txt= txt +"<tr><td>Kvar i lager:</td><td>"+entry.instorage+"</td></tr>"
     txt= txt +"<tr><td>Plats:</td><td>"+entry.location_id+"</td></tr>"
+    txt= txt +"<tr><td>Antal delar:</td><td>"+entry.assembly+"</td></tr>"
     txt= txt +"<tr><td>Senast &auml;ndrad:</td><td>"+entry.lastchange+"</td></tr>"
     txt= txt +"<tr><td>&Auml;ndrad av:</td><td>"+entry.changeby+"</td></tr>"
 
@@ -112,12 +132,12 @@ $('#objectlist').append('<section> Detaljer </br>' + txt + '</section>');
     txt= txt + "<table>";
     
     data.forEach(function(entry) {
-    txt= txt +"<tr><td>" + entry.name + ":</td><td>"+entry.value+"</td></tr>";
+    txt= txt +"<tr><td>" + entry.name + ":</td><td>"+entry.value+"</td>" +"<td> <a href=\"javascript:deleteObject('"+entry.id+"','attributes');;\">Ta bort</a></td></tr>";
 
 
  
 });
-
+    txt += "<tr><td><a href=\"/attributes.html?id="+  urlvars["id"] + "\">L&auml;gg Till</a></td><td></td><td></td></tr>"
     txt= txt +"</table>";
 $('#attributes').append('<section> &Ouml;vrig informaion </br>' + txt + '</section>');
 });

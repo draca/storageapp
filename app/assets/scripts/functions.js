@@ -82,8 +82,9 @@ function sendData(data,url,type)
             contentType: "JSON",
             success: function(msg) {
                             alert("Oprationen lyckades!");
-                            
-                            window.location.replace(url.substring(url.lastIndexOf("/"),url.length) );
+                            console.log(url);
+                            console.log(url.replace("api","/"));
+                            window.location.replace(url.replace("api","/") );
                           },
             error: function(xhr, ajaxOptions, thrownError) { alert("Ett fel har inträffat! Har du loggat in?");}
 
@@ -107,26 +108,40 @@ function getUrlVars() {
     });
     return map;
 }
-function addObject(form){
+function addObject(form)
+{
+    var urlvars = getUrlVars();
     object = {};
     object["discription"] = form.discription.value;
     object["type_id"] = form.type.value;
     object["sum"] = form.sum.value;
     object["assembly"] = form.assembly.value;
     object["instorage"] = form.sum.value;
+    if (!isNaN(form.instorage.value))
+    {
+           object["instorage"] = form.instorage.value;
+    }
     object["location_id"] = form.location.value;
     object["condition_id"] = form.condition.value;
     console.log(jsonify(object));
-sendData(jsonify(object), "/api/objects/", "POST");
+
+if(!isNaN(urlvars['id']))
+{ 
+    sendData(jsonify(object), "/api/objects/"+urlvars['id'], "PUT");
+}
+else
+{
+    sendData(jsonify(object), "/api/objects/", "POST");
+}
 
 return false;
 
-  }
+}
 
 
   function deleteObject(id,type)
   {
-    var r = confirm("Är du säker?");
+    var r = confirm("Vill du ta bort?");
 if (r == true) {
     
 
@@ -135,7 +150,7 @@ if (r == true) {
             url: "/api/"+ type +"/"+id,
             
             success: function(msg) {
-                            alert(type + " med referens "+id + " är borttagen"); location.reload();
+                            alert(type + " med referens "+ id + " togs bort"); location.reload();
  
 
                           },
@@ -232,4 +247,60 @@ function addUser(form)
 
  return false;
 
+}
+
+
+
+function deletePicture(id)
+{
+
+
+
+         $.ajax({
+            type: "DELETE",
+            url: "/api/image/"+id,
+            dataType: "JSON",
+            contentType: "JSON",
+            success: function(msg) {
+                            alert("Oprationen lyckades!");
+                            
+                            location.reload();
+                          },
+            error: function(xhr, ajaxOptions, thrownError) { alert("Ett fel har inträffat! Har du loggat in?");}
+
+        });
+
+
+
+        return false;
+}
+
+
+
+
+function uploadImage(form)
+{
+    var urlvars = getUrlVars();
+    var id = urlvars['id']
+    var file_data = $('#fileToUpload').prop('files')[0];   
+    var form_data = new FormData(form);                  
+    form_data.append('file', file_data)                           
+    $.ajax({
+                url: "/api/image/"+id, // point to server-side PHP script 
+                dataType: 'text',  // what to expect back from the PHP script, if anything
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data,
+                dataType: "JSON",                        
+                type: 'post',
+                success: function(msg) {
+                            alert("Oprationen lyckades!");
+                            
+                            location.reload();
+                          },
+            error: function(xhr, ajaxOptions, thrownError) { alert("Ett fel har inträffat! Har du loggat in?");}
+     });
+
+return false
 }

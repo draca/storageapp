@@ -50,13 +50,14 @@
 
 <script> 
 var txt = "";
-   $.getJSON("/api/type/",function(data,status){
+   $.getJSON("/api/types",function(data,status){
 
     txt= txt + "<table >";
     txt= txt + "<tr><td>ID:</td><td>Namn:</td></tr>";
     data.forEach(function(entry) {
-    txt= txt +"<tr>"
+    txt= txt +"<tr>";
     txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.name+"</td>";
+     txt+= "<td> <a href=\"javascript:deleteObject('"+entry.id+"','types');;\">Ta bort</a></td>";
 
     
     txt= txt +"</tr>";

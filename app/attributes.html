@@ -11,7 +11,46 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="/assets/scripts/functions.js"></script>
 
+<script>
 
+
+
+
+function addAttribute(form)
+{
+var object = {};
+var urlvars = getUrlVars();
+var data;
+
+object['object_id'] = urlvars['id'];
+object['value'] = form.rvalue.value;
+object['name'] = form.name.value;
+
+data = jsonify(object);
+console.log(data);
+
+         $.ajax({
+            type: "POST",
+            url: "/api/attributes",
+            data:  data,
+            dataType: "JSON",
+            contentType: "JSON",
+            success: function(msg) {
+                            alert("Oprationen lyckades!");
+                            
+                            window.location.replace("/details.html?id="+urlvars['id'] );
+                          },
+            error: function(xhr, ajaxOptions, thrownError) { alert("Ett fel har inträffat! Har du loggat in?");}
+
+        });
+
+
+
+        return false;
+}
+
+
+</script>
 
 
 
@@ -27,44 +66,39 @@
         <li><a href="/conditions/index.html">Skick</a></li>
         <li><a href="/users/index.html">Anv&auml;ndare</a></li>
       </ul>
-        <script>
+      <script>
        if(getCookie("token")!=""){ $("#menu").append( "<li><a href=\"javascript:logout();;\">Logga ut</a></li>");}
        else{ $("#menu").append( "<li><a href=\"/login.html\">Logga in</a></li>"); } 
       </script>
     </header>
 
 <content> 
-<section>
-<form action="#" onsubmit="return addUser(this);">
+  <section>
+<form action="#" onsubmit="return addAttribute(this);">
 
-Anv&auml;ndarnamn:<br>
-<input type="text" name="username">
-<br>
 Namn:<br>
 <input type="text" name="name">
 <br>
-E-post:<br>
-<input type="text" name="email">
-<br>
-Lösenord:
-<br>
-<input type="text" name="pw">
-<br>
-
-Rättighet: <BR>
-<SELECT name="access">
-<OPTION value="1" SELECTED> L&auml;gga till</option>
-<OPTION value="2" > L&auml;gga till och redigeral</option>
-<OPTION value="3" >L&auml;gga till/redigera/ta bort</option>
-  <OPTION value="4"> L&auml;gga till/redigera/ta bort/hantera anv&auml;ndare</option>
-</SELECT>
-
-
+Värde:<br>
+<input type="text" name="rvalue">
 <br>
 <input type="submit" value="Submit">
 
 </form>
+
 </section>
+
+
+
+<div id="objectlist">
+
+
+
+</div>
+
+
+
+
 </content> 
    
 

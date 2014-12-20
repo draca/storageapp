@@ -1,12 +1,63 @@
 <!DOCTYPE html>
 <html>
-<body>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Preserven</title>
+      <meta name="description" content="">
+      <meta name="viewport" content="width=device-width">
+      <link rel="stylesheet" href="/assets/css/normalize.css">
+      <link rel="stylesheet" href="/assets/css/app.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="/assets/scripts/functions.js"></script>
 
-<form action="api/image/3" method="post" enctype="multipart/form-data">
+
+
+
+
+  </head><body>
+    
+    <header>
+      <img src="/assets/img/logga.png" alt="">
+      <ul id="menu">
+        <li><a href="/">M&ouml;bler</a></li>
+        <li><a href="/locations/index.html">Platser</a></li>
+        <li><a href="/types/index.html">M&ouml;beltyper</a></li>
+        <li><a href="/conditions/index.html">Skick</a></li>
+        <li><a href="/users/index.html">Anv&auml;ndare</a></li>
+      </ul>
+      <script>
+       if(getCookie("token")!=""){ $("#menu").append( "<li><a href=\"javascript:logout();;\">Logga ut</a></li>");}
+       else{ $("#menu").append( "<li><a href=\"/login.html\">Logga in</a></li>"); } 
+      </script>
+    </header>
+
+<content> 
+<form action="#" method="post" enctype="multipart/form-data" onsubmit="return uploadImage(this);">
     Select image to upload:
     <input type="file" name="fileToUpload" id="fileToUpload">
     <input type="submit" value="Upload Image" name="submit">
 </form>
 
-</body>
+
+
+
+
+<div id="objectlist">
+
+
+
+</div>
+
+
+
+
+</content> 
+   
+
+    <footer>
+      footer
+    </footer>
+
+  </body>
 </html>

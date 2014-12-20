@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="latin1_swedish_ci">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
       <title>Preserven</title>
       <meta name="description" content="">
@@ -10,6 +10,7 @@
       <link rel="stylesheet" href="/assets/css/app.css">
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="/assets/scripts/functions.js"></script>
+
 
 
 
@@ -51,6 +52,7 @@ var txt = "";
     data.forEach(function(entry) {
     txt= txt +"<tr>"
     txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.name+"</td>" + "<td>"+entry.value+"</td>" +"<td>"+entry.discription+"</td>";
+    txt += "<td> <a href=\"javascript:deleteObject('"+entry.id+"','conditions');;\">Ta bort</a></td>";
 
     
     txt= txt +"</tr>";

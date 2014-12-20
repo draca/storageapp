@@ -13,6 +13,48 @@
 
 
 
+<script>
+var urlvars = getUrlVars();
+var object = {};
+if(!isNaN( urlvars['id'] ));
+{
+
+
+
+$.ajax({
+            type: 'GET',
+            url: "/api/objects/"+ urlvars["id"],
+            dataType: "JSON",
+            contentType: "JSON",
+            async: false,
+            success: function(msg) {
+                                msg.forEach(function(entry) {
+                                if(typeof entry !== "undefined")
+                              {
+                                console.log(jsonify(entry));
+                            object = entry;
+                          }
+                          else { console.log("entry undefined"); }
+                                    });            
+
+                                                },
+            
+            error: function(xhr, ajaxOptions, thrownError) { console.log("Not found"); }
+        });
+
+
+
+
+
+
+}  
+
+
+
+</script>
+
+
+
 
 
   </head>
@@ -34,41 +76,42 @@
     </header>
 
 <content> 
-<form action="#" onsubmit="return addObject(this);">
+  <section>
+<form action="#" onsubmit="return addObject(this);" id="addform">
 
 Beskrivning:<br>
-<input type="text" name="discription">
+<input type="text" name="discription" id="discription">
 <br>
 Typ:<br>
-<input type="text" name="type">
+<SELECT name="type" id="type">
+
+</SELECT>
+
 <br>
 Skick:<br>
-<input type="text" name="condition">
+<SELECT name="condition" id="condition">
+
+</SELECT>
 <br>
 Plats:<br>
-<input type="text" name="location">
+<SELECT name="location" id="location">
+
+</SELECT>
 <br>
 Antal delar:<br>
-<input type="text" name="assembly">
+<input type="text" name="assembly" id="assembly" >
 <br>
 Antal:<br>
-<input type="text" name="sum">
+<input type="text" name="sum" id="sum">
 <br>
+I lager(Kan l&auml;mnas tom):<br>
+<input type="text" name="instorage" id="instorage">
+<br>
+
 <input type="submit" value="Submit">
 
 </form>
-
-
-
-
-
-<div id="objectlist">
-
-
-
-</div>
-
-
+</section>
 
 
 </content> 
@@ -77,6 +120,80 @@ Antal:<br>
     <footer>
       footer
     </footer>
+
+<script>
+
+
+
+
+$.getJSON("/api/types",function(data,status){
+
+    var txt = "";
+    var selected= "";
+    data.forEach(function(entry) {
+     if(  typeof object !== "undefined"  && object.type_id == entry.id ){ selected = "SELECTED"}
+      else {  }
+
+    txt += "<OPTION value=\""+ entry.id +"\" "+ selected + ">"+ entry.name + "</option>"
+
+    
+  });
+    $('#type').append(txt);
+    
+});
+
+
+
+
+$.getJSON("/api/conditions",function(data,status){
+
+    var txt = "";
+    var selected= "";
+
+    data.forEach(function(entry) {
+     if(  typeof object !== "undefined"  && object.condition_id == entry.id ){ selected = "SELECTED"}
+      else {  }
+
+    txt += "<OPTION value=\""+ entry.id +"\" "+ selected + ">"+ entry.name + "</option>"
+
+    
+  });
+    $('#condition').append(txt);
+    
+});
+
+
+
+$.getJSON("/api/locations",function(data,status){
+    var txt = "";
+    var selected= "";
+
+    data.forEach(function(entry) {
+    if(  typeof object !== "undefined"  && object.location_id == entry.id ){ selected = "SELECTED"}
+      else { }
+
+
+    txt += "<OPTION value=\""+ entry.id +"\" "+ selected + ">"+ entry.name + "</option>"
+
+    
+  });
+    $('#location').append(txt);
+    
+});
+
+
+if(typeof object !== "undefined")
+{
+  $('#discription').val(object.discription);
+  $('#assembly').val( object.assembly);
+  $('#sum').val (object.sum);
+  $('#instorage').val(object.instorage);
+}
+
+
+</script>
+
+
 
   </body>
 </html>

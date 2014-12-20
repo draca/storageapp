@@ -53,7 +53,7 @@ var txt = "";
     txt= txt + "<tr><td>Referensnummer:</td><td>Antal:</td><td>I lager:</td><td>Typ:</td><td>Beskrivning:</td><td>Plats:</td><td></td><td></td></tr>";
     data.forEach(function(entry) {
     txt= txt +"<tr>"
-    txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.sum+"</td>" + "<td>"+entry.instorage+"</td>" +"<td>"+entry.type_id+"</td>" +"<td>"+entry.discription+"</td>" +"<td>"+entry.location_id+"</td>" +'<td><a href="http://localhost/details.html?id='+entry.id+'">Detailjer</a> </td>' + "<td> <a href=\"javascript:deleteObject('"+entry.id+"','objects');;\">Ta bort</a></td>"
+    txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.sum+"</td>" + "<td>"+entry.instorage+"</td>" +"<td>"+entry.type_id+"</td>" +"<td>"+entry.discription+"</td>" +"<td>"+entry.location_id+"</td>" +'<td><a href="http://localhost/details.html?id='+entry.id+'">Detaljer</a> </td>' + "<td> <a href=\"javascript:deleteObject('"+entry.id+"','objects');;\">Ta bort</a></td>";
 
     
     txt= txt +"</tr>"

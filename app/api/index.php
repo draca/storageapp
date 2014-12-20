@@ -446,9 +446,9 @@ $app->get('/objects/:id',function ($id) use ($app) {
     }
 });
 
-$app->put('/objects/:id/:token',function ($id,$token) use ($app) {
+$app->put('/objects/:id',function ($id) use ($app) {
    try { 
-
+        $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
         $user = User::find_by_pk($session->username);
@@ -462,7 +462,7 @@ $app->put('/objects/:id/:token',function ($id,$token) use ($app) {
         foreach ($payload as $k => $v) 
         {
             $object -> $k = $v;
-            echo "\$a[$k] => $v.\n";
+            
         }
         $object -> lastchange = (new \DateTime())->format('Y-m-d H:i:s');
        $object -> save();
@@ -580,7 +580,7 @@ $app->delete('/conditions/:id',function ($id) use ($app) {
         $user = User::find_by_pk($session->username);
         if($user -> access < 3){ throw new Exception("Access Denied!!");}
 
-        $object=Condition::all('all', array('conditions' => array('id' => $id)));
+        $object=Condition::find_by_pk($id);
         $object -> delete();
 
         echo json_encode(array('status' => 'ok'));
@@ -677,7 +677,7 @@ $app->delete('/attributes/:id',function ($id) use ($app) {
         if($user -> access < 3){ throw new Exception("Access Denied!!");}
 
 
-        $object=Attribute::all('all', array('conditions' => array('id' => $id)));
+        $object=Attribute::find_by_pk($id);
         $object -> delete();
 
         echo json_encode(array('status' => 'ok'));
@@ -787,7 +787,7 @@ $app->delete('/locations/:id',function ($id) use ($app) {
 });
 // Type list routes
 
-$app->get('/type/', function ($id) {
+$app->get('/types', function ($id) {
 
     try {
      
@@ -859,14 +859,14 @@ $app->put('/types/:id',function ($id,$token) use ($app) {
     }
 });
 
-$app->delete('/types/:id',function ($id,$token) use ($app) {
+$app->delete('/types/:id',function ($id) use ($app) {
    try { 
         $token = $_COOKIE["token"];
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
         $user = User::find_by_pk($session->username);
         if($user -> access < 3){ throw new Exception("Access Denied!!");}
-        $object=Location::all('all', array('conditions' => array('id' => $id)));
+        $object=Type::find_by_pk($id);
         $object -> delete();
 
         echo json_encode(array('status' => 'ok'));
@@ -876,6 +876,11 @@ $app->delete('/types/:id',function ($id,$token) use ($app) {
         echo $e->getMessage();
     }
 });
+
+
+
+// Picture routes
+
 
 $app->get('/image/:id',function($id) use ($app) {
 $res = $app->response();
@@ -895,6 +900,9 @@ try{
 
 
 });
+
+
+
 
 $app->get('/object/:id/imagelist',function($id) use ($app) 
 {
@@ -970,6 +978,27 @@ echo json_encode(array('status' => 'ok'));
 
 
 });
+
+
+$app->delete('/image/:id',function ($id) use ($app) {
+   try { 
+        $token = $_COOKIE["token"];
+        $payload = json_decode($app->request()->getBody());
+        $session = is_session_active($token);
+        $user = User::find_by_pk($session->username);
+        if($user -> access < 3){ throw new Exception("Access Denied!!");}
+        $object=Picture::find_by_pk($id);
+        $object -> delete();
+
+        echo json_encode(array('status' => 'ok'));
+
+    } catch (Exception $e) {
+
+        echo $e->getMessage();
+    }
+});
+
+
 
 
 
