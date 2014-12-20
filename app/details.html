@@ -119,7 +119,7 @@ $('#pictures').append('<section> Bilder </br>' + txt + '</section>');
     txt= txt +"</table>";
 
 
-$('#objectlist').append('<section> Detaljer </br>' + txt + '</section>');
+$('#objectlist').append('<section> Detaljer <a href=\"add.html?id='+ data[0].id +'\">&aumlndra</a></br>' + txt + '</section>');
 });
 
    $.getJSON("/api/attributes/object/"+ urlvars["id"],function(data,status){

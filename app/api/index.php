@@ -159,7 +159,7 @@ function arToJson( $data, $options = null ) {
 /*************************************************************************************************************************************/
 
 
-$app->get('/user', function () {
+$app->get('/users', function () {
 
     try {
         echo arToJson( User::all(array( 'select' => 'username,email,name,access'   ) ) );
@@ -170,10 +170,10 @@ $app->get('/user', function () {
 });
 
 
-$app->get('/user/search/:query', function( $query ) {
+$app->get('/users/:id', function( $id ) {
 
     try {
-        echo arToJson( User::all( 'first', array( 'conditions' => array( 'username' => $query ),'select' => 'username,email,name,access'  ) ) );
+        echo arToJson( User::all( 'first', array( 'conditions' => array( 'username' => $id ),'select' => 'username,email,name,access'  ) ) );
     } catch (Exception $e) {
         echo $e->getMessage();
     }
@@ -298,21 +298,14 @@ $app->put('/user/:id', function ($id) use ($app)  {
         $post = User::find_by_pk($id);
 // oldPwd new Pwd
 
-        if( $payload->newPwd != ""  )
-        {
-            if( $post->password == kda($payload->oldPwd, $post->salt) )
-            {
-
-                $post->password = kda($payload->newPwd , $post->salt);
-
-            }else{   throw new Exception("Wrong Password"); }
 
 
-        } 
 
-
-        if($payload-> access != ""){$payload-> access = $payload->access; }
+        if($payload-> access != ""){$post-> access = $payload->access; }
         if($payload->email != ""){ $post->email    = $payload->email;}
+        if($payload->password != ""){ $post->password    = $payload->password;}
+        if($payload->name != ""){ $post->name    = $payload->name;}
+        if($payload->username != ""){ $post->name    = $payload->name;}
 
         $post->save();
 

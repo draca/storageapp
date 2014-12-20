@@ -69,9 +69,9 @@ return json;
 
 
 
-function sendData(data,url,type)
+function sendData(data,url,type, redirect)
 {
-
+    var urlvars = getUrlVars();
    
 
        $.ajax({
@@ -82,9 +82,14 @@ function sendData(data,url,type)
             contentType: "JSON",
             success: function(msg) {
                             alert("Oprationen lyckades!");
-                            console.log(url);
-                            console.log(url.replace("api","/"));
-                            window.location.replace(url.replace("api","/") );
+                            if(redirect != "")
+                            {
+                                
+                                window.location.replace(redirect);
+                            }
+                                else{
+                                window.location.replace(url.substring(url.lastIndexOf("/"),url.length) );
+                            }
                           },
             error: function(xhr, ajaxOptions, thrownError) { alert("Ett fel har inträffat! Har du loggat in?");}
 
@@ -127,11 +132,11 @@ function addObject(form)
 
 if(!isNaN(urlvars['id']))
 { 
-    sendData(jsonify(object), "/api/objects/"+urlvars['id'], "PUT");
+    sendData(jsonify(object), "/api/objects/"+urlvars['id'], "PUT", "/details.html?id="+urlvars['id']);
 }
 else
 {
-    sendData(jsonify(object), "/api/objects/", "POST");
+    sendData(jsonify(object), "/api/objects/", "POST","");
 }
 
 return false;
@@ -176,7 +181,7 @@ function addLocation(form)
     object["adress"] = form.adress.value;
     object["postal"] = form.postal.value;
     console.log(jsonify(object));
- sendData(jsonify(object), "/api/locations", "POST");
+ sendData(jsonify(object), "/api/locations", "POST","");
 
  return false;
 
@@ -187,7 +192,7 @@ function addType(form)
       object = {};
     object["name"] = form.name.value;
     console.log(jsonify(object));
- sendData(jsonify(object), "/api/types", "POST");
+ sendData(jsonify(object), "/api/types", "POST","");
 
  return false;
 
@@ -200,7 +205,7 @@ function addCondition(form)
     object["value"] = form.svalue.value;
     object["discription"] = form.discription.value;
     console.log(jsonify(object));
- sendData(jsonify(object), "/api/conditions", "POST");
+ sendData(jsonify(object), "/api/conditions", "POST","");
 
  return false;
 
@@ -236,14 +241,21 @@ function logout()
 
 function addUser(form)
 {
-          object = {};
+    var urlvar = getUrlVars()
+
+
+    object = {};
     object["name"] = form.name.value;
     object["username"] = form.username.value;
     object["email"] = form.email.value;
     object["password"] = form.pw.value;
     object["access"] = form.access.value;
+
+    if(form.pw.value == "" &&  urlvar['id']== "" ){ alert("Ditt lösenord kan ite vara blankt"); }
+    else if (form.pw.value != "" && urlvar['id']!= "" ){sendData(jsonify(object), "/api/users", "POST","");}
+    else if (urlvar['id'] !="" ){sendData(jsonify(object), "/api/user/"+urlvar['id'], "PUT","/users/index.html");}
     console.log(jsonify(object));
-    sendData(jsonify(object), "/api/users", "POST");
+    
 
  return false;
 

@@ -10,7 +10,45 @@
       <link rel="stylesheet" href="/assets/css/app.css">
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="/assets/scripts/functions.js"></script>
+<script>
+var urlvars = getUrlVars();
+var object = {};
+if(!isNaN( urlvars['id'] ));
+{
 
+
+
+$.ajax({
+            type: 'GET',
+            url: "/api/users/"+ urlvars["id"],
+            dataType: "JSON",
+            contentType: "JSON",
+            async: false,
+            success: function(msg) {
+                                msg.forEach(function(entry) {
+                                if(typeof entry !== "undefined")
+                              {
+                                console.log(jsonify(entry));
+                            object = entry;
+                          }
+                          else { console.log("entry undefined"); }
+                                    });            
+
+                                                },
+            
+            error: function(xhr, ajaxOptions, thrownError) { console.log("Not found"); }
+        });
+
+
+
+
+
+
+}  
+
+
+
+</script>
 
 
 
@@ -38,21 +76,21 @@
 <form action="#" onsubmit="return addUser(this);">
 
 Anv&auml;ndarnamn:<br>
-<input type="text" name="username">
+<input type="text" name="username" id="username">
 <br>
 Namn:<br>
-<input type="text" name="name">
+<input type="text" name="name" id="name">
 <br>
 E-post:<br>
-<input type="text" name="email">
+<input type="text" name="email" id="email">
 <br>
 Lösenord:
 <br>
-<input type="text" name="pw">
+<input type="text" name="pw" id="pw">
 <br>
 
 Rättighet: <BR>
-<SELECT name="access">
+<SELECT name="access" id="access">
 <OPTION value="1" SELECTED> L&auml;gga till</option>
 <OPTION value="2" > L&auml;gga till och redigeral</option>
 <OPTION value="3" >L&auml;gga till/redigera/ta bort</option>
@@ -71,6 +109,21 @@ Rättighet: <BR>
     <footer>
       footer
     </footer>
+
+<script>
+
+if(typeof object !== "undefined")
+{
+  $('#username').val(object.username);
+  $('#name').val( object.name);
+  $('#email').val (object.email);
+  $('#instorage').val(object.instorage);
+  $('#access').val(object.access);
+}
+
+
+</script>
+
 
   </body>
 </html>
