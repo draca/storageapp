@@ -36,9 +36,10 @@
 
 <content> 
 
+<div id="addpanel">
 <a href="/users/add.html">L&auml;gg Till</a>
 
-
+</div>
 
 
 <div id="objectlist">
@@ -61,8 +62,14 @@ var txt = "";
 
     txt= txt +"<tr>";
     txt= txt + "<td>"+entry.username+"</td>" + "<td>"+entry.name+"</td>" + "<td>"+entry.email+"</td>" +"<td>"+ratt+"</td>";
-    txt += "<td><a href=\"/users/add.html?id=" + entry.username + "\">&Aumlndra</a></td>"
     
+if(getCookie('token')!="")
+{
+    txt += "<td><a href=\"/users/add.html?id=" + entry.username + "\">&Aumlndra</a></td>"
+    txt += "<td> <a href=\"javascript:deleteObject('"+entry.username+"','user');;\">Ta bort</a></td>";
+}
+
+
     txt= txt +"</tr>";
     
 });
@@ -71,7 +78,10 @@ $('#objectlist').append('<section> Anv&aumlndarlista </br>' + txt + '</section>'
 });
 
 
-
+ if(getCookie('token')=="")
+    {
+      $('#addpanel').hide();
+     }
 
 </script>
 

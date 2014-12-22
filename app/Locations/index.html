@@ -35,13 +35,8 @@
     </header>
 
 <content> 
-
+<div id="addpanel">
 <a href="/locations/add.html">L&auml;gg Till</a>
-<div id="adminpanel">
-
-  
-
-
 </div>
 
 
@@ -56,8 +51,12 @@ var txt = "";
     txt= txt + "<tr><td>ID:</td><td>Namn:</td><td>Stad:</td><td>Adress:</td><td>Postkod:</td><td></td></tr>";
     data.forEach(function(entry) {
     txt= txt +"<tr>"
-    txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.name+"</td>" + "<td>"+entry.city+"</td>" +"<td>"+entry.adress+"</td>" +"<td>"+entry.postal+"</td>" + "<td> <a href=\"javascript:deleteObject('"+entry.id+"','locations');;\">Ta bort</a></td>";
+    txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.name+"</td>" + "<td>"+entry.city+"</td>" +"<td>"+entry.adress+"</td>" +"<td>"+entry.postal+"</td>";
 
+    if(getCookie('token')!="")
+    {  
+      txt += "<td> <a href=\"javascript:deleteObject('"+entry.id+"','locations');;\">Ta bort</a></td>";
+    }
     
     txt= txt +"</tr>";
     
@@ -68,7 +67,10 @@ $('#objectlist').append('<section> Lista av platser </br>' + txt + '</section>')
 
 
 
-
+ if(getCookie('token')=="")
+    {
+      $('#addpanel').hide();
+     }
 </script>
 
 </div>

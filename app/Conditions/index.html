@@ -35,9 +35,9 @@
     </header>
 
 <content> 
-
+<div id="addpanel">
 <a href="/conditions/add.html">L&auml;gg Till</a>
-
+</div>
 
 
 
@@ -52,8 +52,12 @@ var txt = "";
     data.forEach(function(entry) {
     txt= txt +"<tr>"
     txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.name+"</td>" + "<td>"+entry.value+"</td>" +"<td>"+entry.discription+"</td>";
-    txt += "<td> <a href=\"javascript:deleteObject('"+entry.id+"','conditions');;\">Ta bort</a></td>";
+   
 
+  if(getCookie('token')!="")
+  {
+    txt += "<td> <a href=\"javascript:deleteObject('"+entry.id+"','conditions');;\">Ta bort</a></td>";
+  }
     
     txt= txt +"</tr>";
     
@@ -63,7 +67,10 @@ $('#objectlist').append('<section> Lista av skick </br>' + txt + '</section>');
 });
 
 
-
+ if(getCookie('token')=="")
+    {
+      $('#addpanel').hide();
+     }
 
 </script>
 

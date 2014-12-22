@@ -11,7 +11,13 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="/assets/scripts/functions.js"></script>
 
+<script>
+$( document ).ready()
+{
+ 
 
+}
+</script>
 
 
 
@@ -38,8 +44,9 @@
 
 <content> 
 
+<div id="addpanel"> 
 <a href="/add.html">L&auml;gg Till</a>
-
+</div>
 
 
 
@@ -53,8 +60,12 @@ var txt = "";
     txt= txt + "<tr><td>Referensnummer:</td><td>Antal:</td><td>I lager:</td><td>Typ:</td><td>Beskrivning:</td><td>Plats:</td><td></td><td></td></tr>";
     data.forEach(function(entry) {
     txt= txt +"<tr>"
-    txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.sum+"</td>" + "<td>"+entry.instorage+"</td>" +"<td>"+entry.type_id+"</td>" +"<td>"+entry.discription+"</td>" +"<td>"+entry.location_id+"</td>" +'<td><a href="http://localhost/details.html?id='+entry.id+'">Detaljer</a> </td>' + "<td> <a href=\"javascript:deleteObject('"+entry.id+"','objects');;\">Ta bort</a></td>";
+    txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.sum+"</td>" + "<td>"+entry.instorage+"</td>" +"<td>"+entry.type_name+"</td>" +"<td>"+entry.discription+"</td>" +"<td>"+entry.location_name+"</td>" +'<td><a href="http://localhost/details.html?id='+entry.id+'">Detaljer</a> </td>';
 
+    if(getCookie('token')!="")
+    {
+      txt += "<td> <a href=\"javascript:deleteObject('"+entry.id+"','objects');;\">Ta bort</a></td>";
+    }
     
     txt= txt +"</tr>"
     
@@ -68,7 +79,10 @@ $('#objectlist').append('<section> M&ouml;bellista </br>' + txt + '</section>');
 });
 
 
-
+ if(getCookie('token')=="")
+    {
+      $('#addpanel').hide();
+     }
 
 </script>
 

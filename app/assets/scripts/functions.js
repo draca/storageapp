@@ -159,7 +159,7 @@ if (r == true) {
  
 
                           },
-            error: function(xhr, ajaxOptions, thrownError) { alert(type + " med referens "+id + " gick inte att ta bort"); }
+            error: function(xhr, ajaxOptions, thrownError) { alert("Åtkomst nekad"); }
             
         });
     return false;
@@ -230,7 +230,7 @@ function logout()
                             location.reload();
                           },
             
-            error: function(xhr, ajaxOptions, thrownError) { alert("Något gick fel"); setCookie("token", "", -1); location.reload();}
+            error: function(xhr, ajaxOptions, thrownError) { alert("Åtkomst nekad"); setCookie("token", "", -1); location.reload();}
         });
 
 
@@ -278,7 +278,7 @@ function deletePicture(id)
                             
                             location.reload();
                           },
-            error: function(xhr, ajaxOptions, thrownError) { alert("Ett fel har inträffat! Har du loggat in?");}
+            error: function(xhr, ajaxOptions, thrownError) { alert("Åtkomst nekad");}
 
         });
 
@@ -311,7 +311,7 @@ function uploadImage(form)
                             
                             location.reload();
                           },
-            error: function(xhr, ajaxOptions, thrownError) { alert("Ett fel har inträffat! Har du loggat in?");}
+            error: function(xhr, ajaxOptions, thrownError) { alert("Åtkomst nekad");}
      });
 
 return false

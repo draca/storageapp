@@ -360,6 +360,23 @@ $app->put('/user', function () use ($app)  {
 });
 
 // DELETE route
+$app->delete('/user/:id', function ($id) use ($app) {
+   try {
+        $token = $_COOKIE["token"];
+        $payload = json_decode($app->request()->getBody());
+        $session = is_session_active($token);
+        if($user -> access < 4){ throw new Exception("Access Denied!!");}
+        $post = User::find_by_pk($id);
+        User::delete($post);
+
+        echo json_encode(array('status' => 'ok'));
+
+    } catch (Exception $e) {
+
+        echo $e->getMessage();
+    }
+});
+
 $app->delete('/user', function ($token) use ($app) {
    try {
         $token = $_COOKIE["token"];
@@ -389,8 +406,12 @@ $app->delete('/user', function ($token) use ($app) {
 $app->get('/objects/', function () {
 
     try {
+        $tjoin = 'LEFT JOIN types ON(objects.type_id = types.id)';
+        $ljoin = 'LEFT JOIN locations ON(objects.location_id = locations.id)';
+        $cjoin = 'LEFT JOIN conditions ON(objects.condition_id = conditions.id)';
+
      
-        echo arToJson( Objects::all());
+        echo arToJson( Objects::all(array('joins' => array($tjoin,$ljoin,$cjoin),'select' => 'objects.id as id,sum, type_id,types.name as type_name,instorage,condition_id,conditions.name as condition_name,assembly, objects.discription as discription,location_id,locations.name as location_name,objects.lastchange as lastchange,objects.changeby as changeby')));
 
     } catch (Exception $e) {
         echo $e->getMessage();
@@ -429,9 +450,19 @@ $app->get('/objects/:id',function ($id) use ($app) {
 
         $payload = json_decode($app->request()->getBody());
         $session = is_session_active($token);
-        $object=Objects::all('all', array('conditions' => array('id' => $id)));
 
-       echo arToJson( $object ) ;
+
+        $tjoin = 'LEFT JOIN types ON(objects.type_id = types.id)';
+        $ljoin = 'LEFT JOIN locations ON(objects.location_id = locations.id)';
+        $cjoin = 'LEFT JOIN conditions ON(objects.condition_id = conditions.id)';
+
+     
+        echo arToJson( Objects::all(array('joins' => array($tjoin,$ljoin,$cjoin),'select' => 'objects.id as id,sum, type_id,types.name as type_name,instorage,condition_id,conditions.name as condition_name,assembly, objects.discription as discription,location_id,locations.name as location_name,objects.lastchange as lastchange,objects.changeby as changeby','conditions' => array('id' => $id))));
+
+
+       // $object=Objects::all('all', array('conditions' => array('id' => $id)));
+
+       
 
     } catch (Exception $e) {
 

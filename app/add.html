@@ -129,12 +129,9 @@ I lager(Kan l&auml;mnas tom):<br>
 $.getJSON("/api/types",function(data,status){
 
     var txt = "";
-    var selected= "";
+   
     data.forEach(function(entry) {
-     if(  typeof object !== "undefined"  && object.type_id == entry.id ){ selected = "SELECTED"}
-      else {  }
-
-    txt += "<OPTION value=\""+ entry.id +"\" "+ selected + ">"+ entry.name + "</option>"
+    txt += "<OPTION value=\""+ entry.id +"\" >"+ entry.name + "</option>"
 
     
   });
@@ -148,13 +145,10 @@ $.getJSON("/api/types",function(data,status){
 $.getJSON("/api/conditions",function(data,status){
 
     var txt = "";
-    var selected= "";
 
     data.forEach(function(entry) {
-     if(  typeof object !== "undefined"  && object.condition_id == entry.id ){ selected = "SELECTED"}
-      else {  }
 
-    txt += "<OPTION value=\""+ entry.id +"\" "+ selected + ">"+ entry.name + "</option>"
+    txt += "<OPTION value=\""+ entry.id +"\" >"+ entry.name + "</option>"
 
     
   });
@@ -166,14 +160,13 @@ $.getJSON("/api/conditions",function(data,status){
 
 $.getJSON("/api/locations",function(data,status){
     var txt = "";
-    var selected= "";
+    
 
     data.forEach(function(entry) {
-    if(  typeof object !== "undefined"  && object.location_id == entry.id ){ selected = "SELECTED"}
-      else { }
 
 
-    txt += "<OPTION value=\""+ entry.id +"\" "+ selected + ">"+ entry.name + "</option>"
+
+    txt += "<OPTION value=\""+ entry.id +"\" >"+ entry.name + "</option>"
 
     
   });
@@ -188,6 +181,9 @@ if(typeof object !== "undefined")
   $('#assembly').val( object.assembly);
   $('#sum').val (object.sum);
   $('#instorage').val(object.instorage);
+  $('#location').val( object.location_id);
+  $('#type').val (object.type_id);
+  $('#condition').val(object.condition_id);
 }
 
 

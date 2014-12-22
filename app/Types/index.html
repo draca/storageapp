@@ -36,11 +36,10 @@
 
 <content> 
 
-<a href="/types/add.html">L&auml;gg Till</a>
-<div id="adminpanel">
 
-  
+<div id="addpanel">
 
+<a href="/types/add.html">L&auml;gg Till</a>  
 
 </div>
 
@@ -57,8 +56,11 @@ var txt = "";
     data.forEach(function(entry) {
     txt= txt +"<tr>";
     txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.name+"</td>";
-     txt+= "<td> <a href=\"javascript:deleteObject('"+entry.id+"','types');;\">Ta bort</a></td>";
 
+   if(getCookie('token')!="")
+    {  
+     txt+= "<td> <a href=\"javascript:deleteObject('"+entry.id+"','types');;\">Ta bort</a></td>";
+   }
     
     txt= txt +"</tr>";
     
@@ -69,7 +71,10 @@ $('#objectlist').append('<section> M&ouml;beltyper </br>' + txt + '</section>');
 
 
 
-
+ if(getCookie('token')=="")
+    {
+      $('#addpanel').hide();
+     }
 </script>
 
 </div>

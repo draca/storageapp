@@ -73,6 +73,9 @@ var txt = "";
     
 });
 txt += "</tr>";
+
+if(getCookie('token')!=""){
+
 txt += "<tr>";
 data.forEach(function(entry) {
 
@@ -80,11 +83,10 @@ data.forEach(function(entry) {
     
 });
 
-
-
-
-
 txt += "</tr>";
+
+}
+
 
 txt += "</table>";
 $('#pictures').append('<section> Bilder </br>' + txt + '</section>');
@@ -103,12 +105,12 @@ $('#pictures').append('<section> Bilder </br>' + txt + '</section>');
     
     data.forEach(function(entry) {
     txt= txt +"<tr><td>Referensnummer:</td><td>"+entry.id+"</td></tr>"
-    txt= txt +"<tr><td>Typ:</td><td>"+entry.type_id+"</td></tr>"
-    txt= txt +"<tr><td>Skick:</td><td>"+entry.condition_id+"</td></tr>"
+    txt= txt +"<tr><td>Typ:</td><td>"+entry.type_name+"</td></tr>"
+    txt= txt +"<tr><td>Skick:</td><td>"+entry.condition_name+"</td></tr>"
     txt= txt +"<tr><td>Beskrivning:</td><td>"+entry.discription+"</td></tr>"
-    txt= txt +"<tr><td>Totalt antal:</td><td>"+entry.sum+"</td></tr>"
+    txt= txt +"<tr><td>Antal:</td><td>"+entry.sum+"</td></tr>"
     txt= txt +"<tr><td>Kvar i lager:</td><td>"+entry.instorage+"</td></tr>"
-    txt= txt +"<tr><td>Plats:</td><td>"+entry.location_id+"</td></tr>"
+    txt= txt +"<tr><td>Plats:</td><td>"+entry.location_name+"</td></tr>"
     txt= txt +"<tr><td>Antal delar:</td><td>"+entry.assembly+"</td></tr>"
     txt= txt +"<tr><td>Senast &auml;ndrad:</td><td>"+entry.lastchange+"</td></tr>"
     txt= txt +"<tr><td>&Auml;ndrad av:</td><td>"+entry.changeby+"</td></tr>"
@@ -118,8 +120,10 @@ $('#pictures').append('<section> Bilder </br>' + txt + '</section>');
 
     txt= txt +"</table>";
 
+if(getCookie('token')!=""){ txt = "<a href=\"add.html?id='+ data[0].id +'\">&aumlndra</a></br>" + txt ; }
 
-$('#objectlist').append('<section> Detaljer <a href=\"add.html?id='+ data[0].id +'\">&aumlndra</a></br>' + txt + '</section>');
+
+$('#objectlist').append('<section> Detaljer ' + txt + '</section>');
 });
 
    $.getJSON("/api/attributes/object/"+ urlvars["id"],function(data,status){
@@ -132,16 +136,25 @@ $('#objectlist').append('<section> Detaljer <a href=\"add.html?id='+ data[0].id 
     txt= txt + "<table>";
     
     data.forEach(function(entry) {
-    txt= txt +"<tr><td>" + entry.name + ":</td><td>"+entry.value+"</td>" +"<td> <a href=\"javascript:deleteObject('"+entry.id+"','attributes');;\">Ta bort</a></td></tr>";
+    txt= txt +"<tr><td>" + entry.name + ":</td><td>"+entry.value+"</td>";
 
+    if(getCookie('token')!="")
+    {
+        txt += "<td> <a href=\"javascript:deleteObject('"+entry.id+"','attributes');;\">Ta bort</a></td></tr>";
+    }
 
  
 });
+    if(getCookie('token')!=""){
     txt += "<tr><td><a href=\"/attributes.html?id="+  urlvars["id"] + "\">L&auml;gg Till</a></td><td></td><td></td></tr>"
+  }
     txt= txt +"</table>";
 $('#attributes').append('<section> &Ouml;vrig informaion </br>' + txt + '</section>');
 });
 
+
+
+if(getCookie('token')==""){$('#upload').hide(); }
 
 </script>
 
