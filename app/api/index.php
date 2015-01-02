@@ -403,7 +403,7 @@ $app->delete('/user', function ($token) use ($app) {
 
 // Object list routes
 
-$app->get('/objects/', function () {
+$app->get('/objects', function () {
 
     try {
         $tjoin = 'LEFT JOIN types ON(objects.type_id = types.id)';
@@ -411,7 +411,7 @@ $app->get('/objects/', function () {
         $cjoin = 'LEFT JOIN conditions ON(objects.condition_id = conditions.id)';
 
      
-        echo arToJson( Objects::all(array('joins' => array($tjoin,$ljoin,$cjoin),'select' => 'objects.id as id,sum, type_id,types.name as type_name,instorage,condition_id,conditions.name as condition_name,assembly, objects.discription as discription,location_id,locations.name as location_name,objects.lastchange as lastchange,objects.changeby as changeby')));
+        echo arToJson( Objects::all(array('joins' => array($tjoin,$ljoin,$cjoin),'select' => 'objects.id as id,sum, type_id,types.name as type_name,instorage,condition_id,conditions.name as condition_name,assembly, objects.discription as discription,location_id,locations.name as location_name,objects.lastchange as lastchange,objects.changeby as changeby','conditions' => $_GET)));
 
     } catch (Exception $e) {
         echo $e->getMessage();

@@ -316,3 +316,70 @@ function uploadImage(form)
 
 return false
 }
+
+
+function applyfilter()
+{
+    var filters = [];
+    var s;
+    if($("#type_id").val() != 0){ filters[filters.length] = "type_id=" + $("#type_id").val() }
+    if($("#location_id").val() != 0){ filters[filters.length] = "location_id=" + $("#location_id").val() }
+    if($("#condition_id").val() != 0){ filters[filters.length] = "condition_id="+ $("#condition_id").val() }
+
+
+
+
+    var txt = "";
+   $.getJSON("/api/objects?"+ filters.join("&"),function(data,status){
+
+    txt= txt + "<table >";
+    txt= txt + "<tr><td>Referensnummer:</td><td>Antal:</td><td>I lager:</td><td>Typ:</td><td>Beskrivning:</td><td>Plats:</td><td></td><td></td></tr>";
+    data.forEach(function(entry) {
+    txt= txt +"<tr>"
+    txt= txt + "<td>"+entry.id+"</td>" + "<td>"+entry.sum+"</td>" + "<td>"+entry.instorage+"</td>" +"<td>"+entry.type_name+"</td>" +"<td>"+entry.discription+"</td>" +"<td>"+entry.location_name+"</td>" +'<td><a href="http://localhost/details.html?id='+entry.id+'">Detaljer</a> </td>';
+
+    if(getCookie('token')!="")
+    {
+      txt += "<td> <a href=\"javascript:deleteObject('"+entry.id+"','objects');;\">Ta bort</a></td>";
+    }
+    
+    txt= txt +"</tr>"
+    
+});
+txt= txt +"</table>";
+$('#objectlist').empty();
+$('#objectlist').append('<section> M&ouml;bellista </br>' + txt + '</section>');
+
+
+
+
+});
+
+}
+
+
+function filterpanel()
+{
+    $( "#filterbutton").empty();
+    if($("#filterspanel").is(":visible") )
+    {
+            $( "#filterbutton").append(" <a href=\"javascript:filterpanel();;\">Visa filter&#8680;</a>");
+            $( "#filterspanel" ).hide();
+    }
+    else
+    {
+             $( "#filterbutton").append(" <a href=\"javascript:filterpanel();;\">Göm filter&#8681;</a>");
+             $( "#filterspanel" ).show();
+    }
+   
+   
+   
+
+   
+}
+
+
+$( document ).ready(function() {
+    $("footer").empty();
+
+});

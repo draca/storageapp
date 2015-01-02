@@ -11,13 +11,7 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="/assets/scripts/functions.js"></script>
 
-<script>
-$( document ).ready()
-{
- 
 
-}
-</script>
 
 
 
@@ -43,6 +37,68 @@ $( document ).ready()
     </header>
 
 <content> 
+<section> 
+<div id="filterbutton">
+
+<a href="javascript:filterpanel();;">Visa filter&#8680;</a>
+
+</div>
+
+<div id="filterspanel">
+
+<table style="width:400px">
+<tr>
+<td>
+ Typ: 
+</td>
+
+<td>
+
+<SELECT name="type_id" id="type_id">
+</SELECT>
+</td>
+
+</tr>
+<tr>
+<td>
+ Skick: 
+</td>
+
+<td>
+
+<SELECT name="condition_id" id="condition_id">
+
+</SELECT>
+</td>
+
+</tr>
+<tr>
+<td>
+ Plats: 
+</td>
+
+<td>
+
+<SELECT name="location_id" id="location_id">
+
+</SELECT>
+</td>
+
+</tr>
+<tr>
+
+</tr>
+<tr>
+ <td> 
+<input id="updatelist" type="submit" value="Updatera Lista">
+</td>
+<td></td>
+</tr>
+</table>
+
+</div>
+</section>
+
 
 <div id="addpanel"> 
 <a href="/add.html">L&auml;gg Till</a>
@@ -54,7 +110,7 @@ $( document ).ready()
 
 <script> 
 var txt = "";
-   $.getJSON("/api/objects/",function(data,status){
+   $.getJSON("/api/objects",function(data,status){
 
     txt= txt + "<table >";
     txt= txt + "<tr><td>Referensnummer:</td><td>Antal:</td><td>I lager:</td><td>Typ:</td><td>Beskrivning:</td><td>Plats:</td><td></td><td></td></tr>";
@@ -83,6 +139,62 @@ $('#objectlist').append('<section> M&ouml;bellista </br>' + txt + '</section>');
     {
       $('#addpanel').hide();
      }
+
+$.getJSON("/api/types",function(data,status){
+
+    var txt = "<OPTION value=\"0\" ></option>";
+   
+    data.forEach(function(entry) {
+    txt += "<OPTION value=\""+ entry.id +"\" >"+ entry.name + "</option>"
+
+    
+  });
+    $('#type_id').append(txt);
+    
+});
+
+
+
+
+$.getJSON("/api/conditions",function(data,status){
+
+    var txt = "<OPTION value=\"0\" ></option>";
+
+    data.forEach(function(entry) {
+
+    txt += "<OPTION value=\""+ entry.id +"\" >"+ entry.name + "</option>"
+
+    
+  });
+    $('#condition_id').append(txt);
+    
+});
+
+
+
+$.getJSON("/api/locations",function(data,status){
+    var txt = "<OPTION value=\"0\" ></option>";
+    
+
+    data.forEach(function(entry) {
+
+
+
+    txt += "<OPTION value=\""+ entry.id +"\" >"+ entry.name + "</option>"
+
+    
+  });
+    $('#location_id').append(txt);
+    
+});
+
+$( "#updatelist" ).bind( "click", function(){applyfilter();});
+$( "#filterspanel" ).hide();
+
+
+
+
+
 
 </script>
 
