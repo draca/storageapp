@@ -21,7 +21,7 @@ require 'ActiveRecord.php';
  ActiveRecord\Config::initialize(function($cfg) {
     $cfg->set_model_directory('models');
     $cfg->set_connections(array(
-         'development' => 'mysql://root@127.0.0.1/storageapp'
+         'development' => 'mysql://root@127.0.0.1/livestorageapp'
         //'development' => 'mysql://m4314_riman:siberian@localhost/m43147_db'
     ));
  });
